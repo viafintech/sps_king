@@ -243,4 +243,5 @@ https://github.com/Barzahlen/sps_king/graphs/contributors
 Released under the MIT license
 
 Copyright (c) 2018 Tobias Schoknecht
+
 Copyright (c) 2013-2017 Georg Leciejewski (Sales King GmbH) & Georg Ledermann for portions of this project copied from sepa_king
