@@ -1,0 +1,163 @@
+# encoding: utf-8
+
+module SPS
+  PAIN_008_001_02_CH_03 = 'pain.008.001.02.ch.03'
+  PAIN_001_001_03_CH_02 = 'pain.001.001.03.ch.02'
+
+  class Message
+    include ActiveModel::Validations
+
+    attr_reader :account, :grouped_transactions
+
+    validates_presence_of :transactions
+    validate do |record|
+      record.errors.add(:account, record.account.errors.full_messages) unless record.account.valid?
+    end
+
+    class_attribute :account_class, :transaction_class, :xml_main_tag, :known_schemas
+
+    def initialize(account_options={})
+      @grouped_transactions = {}
+      @account = account_class.new(account_options)
+    end
+
+    def add_transaction(options)
+      transaction = transaction_class.new(options)
+      raise ArgumentError.new(transaction.errors.full_messages.join("\n")) unless transaction.valid?
+      @grouped_transactions[transaction_group(transaction)] ||= []
+      @grouped_transactions[transaction_group(transaction)] << transaction
+    end
+
+    def transactions
+      grouped_transactions.values.flatten
+    end
+
+    # @return [String] xml
+    def to_xml(schema_name=self.known_schemas.first)
+      raise SPS::Error.new(errors.full_messages.join("\n")) unless valid?
+      raise SPS::Error.new("Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
+
+      builder = Nokogiri::XML::Builder.new do |builder|
+        builder.Document(xml_schema(schema_name)) do
+          builder.__send__(xml_main_tag) do
+            build_group_header(builder)
+            build_payment_informations(builder)
+          end
+        end
+      end
+
+      validate_final_document!(builder.doc, schema_name)
+      builder.to_xml
+    end
+
+    def amount_total(selected_transactions=transactions)
+      selected_transactions.inject(0) { |sum, t| sum + t.amount }
+    end
+
+    def schema_compatible?(schema_name)
+      raise ArgumentError.new("Schema #{schema_name} is unknown!") unless self.known_schemas.include?(schema_name)
+
+      case schema_name
+        when PAIN_001_001_03_CH_02
+          transactions.all? { |t| t.schema_compatible?(schema_name) }
+        when PAIN_008_001_02_CH_03
+          transactions.all? { |t| t.schema_compatible?(schema_name) } &&
+          !account.iban.to_s.match(/^(CH|LI)/).nil? # Only allowed for switzerland or liechtenstein
+      end
+    end
+
+    # Set unique identifer for the message
+    def message_identification=(value)
+      raise ArgumentError.new('message_identification must be a string!') unless value.is_a?(String)
+
+      regex = /\A([A-Za-z0-9]|[\+|\?|\/|\-|\:|\(|\)|\.|\,|\'|\ ]){1,35}\z/
+      raise ArgumentError.new("message_identification does not match #{regex}!") unless value.match(regex)
+
+      @message_identification = value
+    end
+
+    # Get unique identifer for the message (with fallback to a random string)
+    def message_identification
+      @message_identification ||= "SPS-KING/#{SecureRandom.hex(11)}"
+    end
+
+    # Set creation date time for the message
+    # p.s. Rabobank in the Netherlands only accepts the more restricted format [0-9]{4}[-][0-9]{2,2}[-][0-9]{2,2}[T][0-9]{2,2}[:][0-9]{2,2}[:][0-9]{2,2}
+    def creation_date_time=(value)
+      raise ArgumentError.new('creation_date_time must be a string!') unless value.is_a?(String)
+
+      regex = /[0-9]{4}[-][0-9]{2,2}[-][0-9]{2,2}(?:\s|T)[0-9]{2,2}[:][0-9]{2,2}[:][0-9]{2,2}/
+      raise ArgumentError.new("creation_date_time does not match #{regex}!") unless value.match(regex)
+
+      @creation_date_time = value
+    end
+
+    # Get creation date time for the message (with fallback to Time.now.iso8601)
+    def creation_date_time
+      @creation_date_time ||= Time.now.iso8601
+    end
+
+    # Returns the id of the batch to which the given transaction belongs
+    # Identified based upon the reference of the transaction
+    def batch_id(transaction_reference)
+      grouped_transactions.each do |group, transactions|
+        if transactions.select { |transaction| transaction.reference == transaction_reference }.any?
+          return payment_information_identification(group)
+        end
+      end
+    end
+
+    def batches
+      grouped_transactions.keys.collect { |group| payment_information_identification(group) }
+    end
+
+  private
+    # @return {Hash<Symbol=>String>} xml schema information used in output xml
+    def xml_schema(schema_name)
+      {
+        :xmlns                => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd",
+        :'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
+        :'xsi:schemaLocation' => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd #{schema_name}.xsd"
+      }
+    end
+
+    def build_group_header(builder)
+      builder.GrpHdr do
+        builder.MsgId(message_identification)
+        builder.CreDtTm(creation_date_time)
+        builder.NbOfTxs(transactions.length)
+        builder.CtrlSum('%.2f' % amount_total)
+        builder.InitgPty do
+          builder.Nm(account.name)
+          builder.Id do
+            builder.OrgId do
+              builder.Othr do
+                builder.Id(account.creditor_identifier)
+              end
+            end
+          end if account.respond_to? :creditor_identifier
+        end
+      end
+    end
+
+    # Unique and consecutive identifier (used for the <PmntInf> blocks)
+    def payment_information_identification(group)
+      "#{message_identification}/#{grouped_transactions.keys.index(group)+1}"
+    end
+
+    # Returns a key to determine the group to which the transaction belongs
+    def transaction_group(transaction)
+      transaction
+    end
+
+    def validate_final_document!(document, schema_name)
+      xsd = Nokogiri::XML::Schema(
+              File.read(
+                File.expand_path("../../../lib/schema/#{schema_name}.xsd", __FILE__)
+              )
+            )
+      errors = xsd.validate(document).map { |error| error.message }
+      raise SPS::Error.new("Incompatible with schema #{schema_name}: #{errors.join(', ')}") if errors.any?
+    end
+  end
+end

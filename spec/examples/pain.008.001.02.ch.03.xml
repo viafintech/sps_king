@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+(C) Copyright 2015, SIX Interbank Clearing AG, www.iso-payments.ch
+
+Anregungen und Fragen zu diesem Dokument können an das jeweilige Finanzinstitut gerichtet werden. 
+Allgemeine Anregungen können auch bei der SIX Interbank Clearing AG unter folgender Adresse angebracht werden: 
+pm@six-group.com
+-->
+<Document xmlns="http://www.six-interbank-clearing.com/de/pain.008.001.02.ch.03.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.six-interbank-clearing.com/de/pain.008.001.02.ch.03.xsd pain.008.001.02.ch.03.xsd">
+	<CstmrDrctDbtInitn>
+		<GrpHdr>
+			<MsgId>MSG-01</MsgId>
+			<CreDtTm>2015-03-23T07:30:00</CreDtTm>
+			<NbOfTxs>3</NbOfTxs>
+			<CtrlSum>4372.50</CtrlSum>
+			<InitgPty>
+				<Nm>MUSTER AG</Nm>
+				<Id>
+					<OrgId>
+						<Othr>
+							<Id>ABC1W</Id>
+						</Othr>
+					</OrgId>
+				</Id>
+			</InitgPty>
+		</GrpHdr>
+		<PmtInf>
+			<PmtInfId>PMTINF-01</PmtInfId>
+			<PmtMtd>DD</PmtMtd>
+			<PmtTpInf>
+				<SvcLvl>
+					<Prtry>CHTA</Prtry>
+				</SvcLvl>
+				<LclInstrm>
+					<Prtry>LSV+</Prtry>
+				</LclInstrm>
+			</PmtTpInf>
+			<ReqdColltnDt>2015-03-30</ReqdColltnDt>
+			<Cdtr>
+				<Nm>MUSTER AG</Nm>
+				<PstlAdr>
+					<Ctry>CH</Ctry>
+					<AdrLine>SELDWYLA</AdrLine>
+				</PstlAdr>
+			</Cdtr>
+			<CdtrAcct>
+				<Id>
+					<IBAN>CH7081232000001998736</IBAN>
+				</Id>
+			</CdtrAcct>
+			<CdtrAgt>
+				<FinInstnId>
+					<ClrSysMmbId>
+						<MmbId>81232</MmbId>
+					</ClrSysMmbId>
+					<Othr>
+						<Id>010001456</Id>
+					</Othr>
+				</FinInstnId>
+			</CdtrAgt>
+			<CdtrSchmeId>
+				<Id>
+					<PrvtId>
+						<Othr>
+							<Id>ABC1W</Id>
+							<SchmeNm>
+								<Prtry>CHLS</Prtry>
+							</SchmeNm>
+						</Othr>
+					</PrvtId>
+				</Id>
+			</CdtrSchmeId>
+			<DrctDbtTxInf>
+				<PmtId>
+					<InstrId>INSTRID-01-01</InstrId>
+					<EndToEndId>NOTPROVIDED</EndToEndId>
+				</PmtId>
+				<InstdAmt Ccy="CHF">3421.00</InstdAmt>
+				<DbtrAgt>
+					<FinInstnId>
+						<ClrSysMmbId>
+							<MmbId>4835</MmbId>
+						</ClrSysMmbId>
+					</FinInstnId>
+				</DbtrAgt>
+				<Dbtr>
+					<Nm>HERR PETER HALLER</Nm>
+					<PstlAdr>
+						<Ctry>CH</Ctry>
+						<AdrLine>ROSENAUWEG 4</AdrLine>
+						<AdrLine>8004 ZÜRICH</AdrLine>
+					</PstlAdr>
+				</Dbtr>
+				<DbtrAcct>
+					<Id>
+						<IBAN>CH9804835011062385295</IBAN>
+					</Id>
+				</DbtrAcct>
+				<RmtInf>
+					<Strd>
+						<CdtrRefInf>
+							<Tp>
+								<CdOrPrtry>
+									<Prtry>ESR</Prtry>
+								</CdOrPrtry>
+							</Tp>
+							<Ref>200002000000004443332000061</Ref>
+						</CdtrRefInf>
+					</Strd>
+				</RmtInf>
+			</DrctDbtTxInf>
+		</PmtInf>
+		<PmtInf>
+			<PmtInfId>PMTINF-02</PmtInfId>
+			<PmtMtd>DD</PmtMtd>
+			<PmtTpInf>
+				<SvcLvl>
+					<Prtry>CHTA</Prtry>
+				</SvcLvl>
+				<LclInstrm>
+					<Prtry>LSV+</Prtry>
+				</LclInstrm>
+			</PmtTpInf>
+			<ReqdColltnDt>2015-03-25</ReqdColltnDt>
+			<Cdtr>
+				<Nm>MUSTER AG</Nm>
+				<PstlAdr>
+					<Ctry>CH</Ctry>
+					<AdrLine>SELDWYLA</AdrLine>
+				</PstlAdr>
+			</Cdtr>
+			<CdtrAcct>
+				<Id>
+					<IBAN>CH7081232000001998736</IBAN>
+				</Id>
+			</CdtrAcct>
+			<CdtrAgt>
+				<FinInstnId>
+					<ClrSysMmbId>
+						<MmbId>81232</MmbId>
+					</ClrSysMmbId>
+					<Othr>
+						<Id>010001456</Id>
+					</Othr>
+				</FinInstnId>
+			</CdtrAgt>
+			<CdtrSchmeId>
+				<Id>
+					<PrvtId>
+						<Othr>
+							<Id>ABC1W</Id>
+							<SchmeNm>
+								<Prtry>CHLS</Prtry>
+							</SchmeNm>
+						</Othr>
+					</PrvtId>
+				</Id>
+			</CdtrSchmeId>
+			<DrctDbtTxInf>
+				<PmtId>
+					<InstrId>INSTRID-02-01</InstrId>
+					<EndToEndId>NOTPROVIDED</EndToEndId>
+				</PmtId>
+				<InstdAmt Ccy="CHF">885.50</InstdAmt>
+				<DbtrAgt>
+					<FinInstnId>
+						<ClrSysMmbId>
+							<MmbId>4835</MmbId>
+						</ClrSysMmbId>
+					</FinInstnId>
+				</DbtrAgt>
+				<Dbtr>
+					<Nm>HANS TESTER</Nm>
+					<PstlAdr>
+						<Ctry>CH</Ctry>
+						<AdrLine>PROBEWEG 88</AdrLine>
+						<AdrLine>9998 IRGENDWO</AdrLine>
+					</PstlAdr>
+				</Dbtr>
+				<DbtrAcct>
+					<Id>
+						<IBAN>CH9804835011062385295</IBAN>
+					</Id>
+				</DbtrAcct>
+				<RmtInf>
+					<Ustrd>Gemäss Rechnung 4712</Ustrd>
+					<Strd>
+						<CdtrRefInf>
+							<Tp>
+								<CdOrPrtry>
+									<Prtry>ESR</Prtry>
+								</CdOrPrtry>
+							</Tp>
+							<Ref>185744810000000000200800628</Ref>
+						</CdtrRefInf>
+					</Strd>
+				</RmtInf>
+			</DrctDbtTxInf>
+			<DrctDbtTxInf>
+				<PmtId>
+					<InstrId>INSTRID-02-02</InstrId>
+					<EndToEndId>NOTPROVIDED</EndToEndId>
+				</PmtId>
+				<InstdAmt Ccy="CHF">66.00</InstdAmt>
+				<DbtrAgt>
+					<FinInstnId>
+						<ClrSysMmbId>
+							<MmbId>700</MmbId>
+						</ClrSysMmbId>
+					</FinInstnId>
+				</DbtrAgt>
+				<Dbtr>
+					<Nm>PETER ERROR</Nm>
+					<PstlAdr>
+						<Ctry>CH</Ctry>
+						<AdrLine>Rudolfsweg 11</AdrLine>
+						<AdrLine>Sion</AdrLine>
+					</PstlAdr>
+				</Dbtr>
+				<DbtrAcct>
+					<Id>
+						<IBAN>CH2007000031023502601</IBAN>
+					</Id>
+				</DbtrAcct>
+				<RmtInf>
+					<Strd>
+						<CdtrRefInf>
+							<Tp>
+								<CdOrPrtry>
+									<Prtry>ESR</Prtry>
+								</CdOrPrtry>
+							</Tp>
+							<Ref>215703000075200334559000126</Ref>
+						</CdtrRefInf>
+					</Strd>
+				</RmtInf>
+			</DrctDbtTxInf>
+		</PmtInf>
+	</CstmrDrctDbtInitn>
+</Document>
