@@ -59,7 +59,7 @@ describe SPS::CreditTransfer do
               )
 
         sct.add_transaction(
-          name:                   'Telekomiker AG',
+          name:                   'Contoso AG',
           bic:                    'CRESCHZZ80A',
           iban:                   'CH9300762011623852957',
           currency:               'CHF',
@@ -96,7 +96,7 @@ describe SPS::CreditTransfer do
               )
 
         sct.add_transaction(
-          name:                   'Telekomiker AG',
+          name:                   'Contoso AG',
           bic:                    'CRESCHZZ80A',
           iban:                   'CH9300762011623852957',
           amount:                 102.50,
@@ -120,7 +120,7 @@ describe SPS::CreditTransfer do
           sct = credit_transfer
 
           sct.add_transaction(
-            name:                   'Telekomiker AG',
+            name:                   'Contoso AG',
             bic:                    'CRESCHZZ80A',
             iban:                   'CH9300762011623852957',
             service_level:          'SEPA',
@@ -142,7 +142,7 @@ describe SPS::CreditTransfer do
           sct = credit_transfer
 
           sct.add_transaction(
-            name:                   'Telekomiker AG',
+            name:                   'Contoso AG',
             bic:                    'CRESCHZZ80A',
             iban:                   'CH9300762011623852957',
             amount:                 102.50,
@@ -222,7 +222,7 @@ describe SPS::CreditTransfer do
         end
 
         it 'should contain <Cdtr>' do
-          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/Cdtr/Nm', 'Telekomiker AG')
+          expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/Cdtr/Nm', 'Contoso AG')
           expect(subject).to have_xml('//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[2]/Cdtr/Nm', 'Amazonas GmbH')
         end
 
@@ -323,7 +323,7 @@ describe SPS::CreditTransfer do
           sct = credit_transfer
 
           sct.add_transaction(
-            name:        'Telekomiker AG',
+            name:        'Contoso AG',
             iban:        'CH5481230000001998736',
             bic:         'RAIFCH22',
             amount:      102.50,

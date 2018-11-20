@@ -154,7 +154,7 @@ sct = SPS::CreditTransfer.new(
 sct.add_transaction(
   # Name of the creditor, in German: "Zahlungsempfänger"
   # String, max. 70 char
-  name:                   'Telekomiker AG',
+  name:                   'Contoso AG',
 
   # Business Identifier Code (SWIFT-Code) of the creditor's account
   # String, 8 or 11 char

@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 def credit_transfer_transaction(attributes={})
-  { name:                   'Telekomiker AG',
+  { name:                   'Contoso AG',
     bic:                    'RAIFCH22',
     iban:                   'CH5481230000001998736',
     amount:                 102.50,

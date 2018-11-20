@@ -6,7 +6,7 @@ describe SPS::CreditTransferTransaction do
     it 'should initialize a valid transaction' do
       expect(
         SPS::CreditTransferTransaction.new(
-          name:                   'Telekomiker AG',
+          name:                   'Contoso AG',
           iban:                   'CH5481230000001998736',
           bic:                    'RAIFCH22',
           amount:                 102.50,
