@@ -6,8 +6,8 @@
 sps_king is a Ruby gem which implements **pain** (**Pa**yment **In**itiation) file building for the Swiss Payment Standard, which is a subset of the ISO 20022 standard.
 This is currently implemented in v1.8 for Swiss Credit Transfers (`pain.001.001.03.ch.02`) and v1.2 for Swiss Direct Debits (`pain.008.001.02.ch.03`).
 
-It is a forked of [sepa_king](https://github.com/salesking/sepa_king) and therefore heavily inspired by the structure and the API.
-
+If you are looking for SEPA **pain** file building, take a look at [sepa_king](https://github.com/salesking/sepa_king).
+This gem is forked of `sepa_king` and therefore heavily inspired by the structure and the API.
 
 ## Requirements
 
