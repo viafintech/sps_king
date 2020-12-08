@@ -7,7 +7,7 @@ Gem::Specification.new do |s|
   s.name          = 'sps_king'
   s.version       = SPS::VERSION
   s.authors       = ['Tobias Schoknecht']
-  s.email         = ['tobias.schoknecht@barzahlen.de']
+  s.email         = ['tobias.schoknecht@viafintech.com']
   s.description   = 'Implemention of pain.001.001.03.ch.02 and pain.008.001.02.ch.03 (ISO 20022)'
   s.summary       = 'Ruby gem for creating SPS XML files'
   s.homepage      = 'http://github.com/Barzahlen/sps_king'
