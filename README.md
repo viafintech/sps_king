@@ -1,6 +1,6 @@
 # Ruby gem for creating SPS XML files
 
-[![Build Status](https://travis-ci.org/Barzahlen/sps_king.svg)](http://travis-ci.org/Barzahlen/sps_king)
+![Build Status](https://github.com/viafintech/sps_king/actions/workflows/test.yml/badge.svg)
 [![Gem Version](https://badge.fury.io/rb/sps_king.svg)](http://badge.fury.io/rb/sps_king)
 
 sps_king is a Ruby gem which implements **pain** (**Pa**yment **In**itiation) file building for the Swiss Payment Standard, which is a subset of the ISO 20022 standard.
@@ -11,8 +11,8 @@ This gem is forked of `sepa_king` and therefore heavily inspired by the structur
 
 ## Requirements
 
-* Ruby 2.1 or newer
-* ActiveModel 3.1 or newer
+* Ruby 2.7 or newer
+* ActiveModel 5.0 or newer
 
 
 ## Installation
@@ -241,6 +241,6 @@ https://github.com/Barzahlen/sps_king/graphs/contributors
 
 Released under the MIT license
 
-Copyright (c) 2018 Tobias Schoknecht
+Copyright (c) 2018-2023 Tobias Schoknecht
 
 Copyright (c) 2013-2017 Georg Leciejewski (Sales King GmbH) & Georg Ledermann for portions of this project copied from sepa_king

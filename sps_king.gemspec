@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
   s.test_files    = s.files.grep(%r{^(test|spec|features)/})
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '>= 2.1'
+  s.required_ruby_version = '>= 2.7'
 
-  s.add_runtime_dependency 'activemodel', '>= 3.1'
+  s.add_runtime_dependency 'activemodel', '>= 5.0'
   s.add_runtime_dependency 'nokogiri'
   s.add_runtime_dependency 'iban-tools'
 
