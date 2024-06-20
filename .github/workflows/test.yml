@@ -14,9 +14,12 @@ jobs:
       fail-fast: false
       matrix:
         ruby: ['3.0', '3.1', '3.2', '3.3']
-        rails: ['6.1', '7.0', '7.1']
+        gemfile:
+          - gemfiles/Gemfile-activemodel-6.1.x
+          - gemfiles/Gemfile-activemodel-7.0.x
+          - gemfiles/Gemfile-activemodel-7.1.x
 
-    name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
+    name: Ruby ${{ matrix.ruby }} / Gemfile {{ matrix.gemfile }}
 
     steps:
       - uses: actions/checkout@v3
@@ -26,8 +29,8 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
 
-      - name: Install dependencies for gemfiles/Gemfile-activemodel-${{ matrix.rails }}
-        run: bundle install --gemfile=gemfiles/Gemfile-activemodel-${{ matrix.rails }}
+      - name: Install dependencies for ${{ matrix.gemfile }}
+        run: bundle install --gemfile=${{ matrix.gemfile }}
 
       - name: Run tests
         run: bundle exec rspec
