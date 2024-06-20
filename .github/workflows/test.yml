@@ -17,8 +17,6 @@ jobs:
         rails: ['6.1', '7.0', '7.1']
 
     name: Ruby ${{ matrix.ruby }} / Rails ${{ matrix.rails }}
-    env:
-      BUNDLE_GEMFILE: gemfiles/Gemfile-activemodel-${{ matrix.rails }}.x
 
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +25,9 @@ jobs:
         uses: ruby/setup-ruby@v1
         with:
           ruby-version: ${{ matrix.ruby }}
+
+      - name: Install dependencies for gemfiles/Gemfile-activemodel-${{ matrix.rails }}
+        run: bundle install --gemfile=gemfiles/Gemfile-activemodel-${{ matrix.rails }}
 
       - name: Run tests
         run: bundle exec rspec
