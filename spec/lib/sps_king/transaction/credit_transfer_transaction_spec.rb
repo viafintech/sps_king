@@ -11,7 +11,7 @@ describe SPS::CreditTransferTransaction do
           bic:                    'RAIFCH22',
           amount:                 102.50,
           reference:              'XYZ-1234/123',
-          remittance_information: 'Rechnung 123 vom 22.08.2013'
+          remittance_information: 'Rechnung 123 vom 22.08.2013',
         )
       ).to be_valid
     end
@@ -48,6 +48,18 @@ describe SPS::CreditTransferTransaction do
 
     it 'should not allow invalid value' do
       expect(SPS::CreditTransferTransaction).not_to accept('', 'X' * 5, for: :category_purpose)
+    end
+  end
+
+  context 'Charge Bearer' do
+    it 'should allow valid value' do
+      expect(SPS::CreditTransferTransaction)
+        .to accept(nil, 'DEBT', 'CRED', 'SHAR', 'SLEV', for: :charge_bearer)
+    end
+
+    it 'should not allow invalid value' do
+      expect(SPS::CreditTransferTransaction)
+        .not_to accept('', 'X' * 5, 'X' * 4, for: :charge_bearer)
     end
   end
 end
