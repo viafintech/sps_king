@@ -91,7 +91,7 @@ sdd.add_transaction(
   # One of these strings:
   #   'CHTA' ("Banklastschrift") - Only for Swiss Direct Debits
   #   'CHDD' ("PostFinance-Lastschrift") - Only for Swiss Direct Debits
-  service_level: 'CHTA'
+  service_level: 'CHTA',
 
   # Local instrument, in German "Lastschriftart"
   # One of these strings:
@@ -197,6 +197,14 @@ sct.add_transaction(
   #   'SEPA' ("SEPA-Zahlung")
   #   'URGP' ("Taggleiche Eilüberweisung")
   service_level: 'URGP'
+
+  # OPTIONAL: Charge Bearer
+  # One of these strings:
+  #   'DEBT' (Borne by Debitor)
+  #   'CRED' (Borne by Creditor)
+  #   'SHAR' (Shared)
+  #   'SLEV' (Service Level) - Must be SLEV for SEPA transfers
+  charge_bearer: 'SHAR',
 
   # OPTIONAL: Unstructured information to indicate the purpose of the payment
   # String, max. 4 char

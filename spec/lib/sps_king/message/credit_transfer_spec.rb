@@ -261,6 +261,27 @@ describe SPS::CreditTransfer do
         end
       end
 
+      context 'with charge bearer' do
+        SPS::CreditTransferTransaction::CHARGE_BEARERS.each do |charge_bearer|
+          context "with value #{charge_bearer}" do
+            subject do
+              sct = credit_transfer
+
+              sct.add_transaction(credit_transfer_transaction.merge(charge_bearer: charge_bearer))
+
+              sct.to_xml
+            end
+
+            it 'should contain payment_information with <ChrgBr>' do
+              puts subject
+
+              expect(subject)
+                .to have_xml('//Document/CstmrCdtTrfInitn/PmtInf[1]/ChrgBr', charge_bearer)
+            end
+          end
+        end
+      end
+
       context 'with different batch_booking given' do
         subject do
           sct = credit_transfer

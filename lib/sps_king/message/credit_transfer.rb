@@ -16,7 +16,8 @@ module SPS
         requested_date:   transaction.requested_date,
         batch_booking:    transaction.batch_booking,
         service_level:    transaction.service_level,
-        category_purpose: transaction.category_purpose
+        category_purpose: transaction.category_purpose,
+        charge_bearer:    transaction.charge_bearer,
       }
     end
 
@@ -56,7 +57,9 @@ module SPS
               builder.BIC(account.bic)
             end
           end
-          builder.ChrgBr('SLEV')
+          if group[:charge_bearer]
+            builder.ChrgBr(group[:charge_bearer])
+          end
 
           transactions.each do |transaction|
             build_transaction(builder, transaction)

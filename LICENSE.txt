@@ -1,4 +1,4 @@
-Copyright (c) 2018-2023 viafintech GmbH
+Copyright (c) 2018-2024 viafintech GmbH
 
 Copyright (c) 2013-2017 Georg Leciejewski (Sales King GmbH) & Georg Ledermann for portions of this project copied from sepa_king
 
