@@ -11,8 +11,8 @@ This gem is forked of `sepa_king` and therefore heavily inspired by the structur
 
 ## Requirements
 
-* Ruby 2.7 or newer
-* ActiveModel 5.0 or newer
+* Ruby 3.1 or newer
+* ActiveModel 6.1 or newer
 
 
 ## Installation
@@ -111,7 +111,7 @@ sdd.add_transaction(
     name:                'Creditor Inc.',
     iban:                'CH7081232000001998736',
     creditor_identifier: '12312'
-  )
+  ),
 
   # Specify the country & address of the debtor (The individually required fields depend on the local legal requirements)
   debtor_address: SPS::DebtorAddress.new(
@@ -196,7 +196,7 @@ sct.add_transaction(
   # One of these strings:
   #   'SEPA' ("SEPA-Zahlung")
   #   'URGP' ("Taggleiche Eilüberweisung")
-  service_level: 'URGP'
+  service_level: 'URGP',
 
   # OPTIONAL: Charge Bearer
   # One of these strings:
