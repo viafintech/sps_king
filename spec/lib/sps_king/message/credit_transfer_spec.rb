@@ -273,8 +273,6 @@ describe SPS::CreditTransfer do
             end
 
             it 'should contain payment_information with <ChrgBr>' do
-              puts subject
-
               expect(subject)
                 .to have_xml('//Document/CstmrCdtTrfInitn/PmtInf[1]/ChrgBr', charge_bearer)
             end
@@ -363,6 +361,37 @@ describe SPS::CreditTransfer do
             .to have_xml(
               '//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/PmtId/InstrId',
               '1234/ABC'
+            )
+        end
+      end
+
+      context 'with structured remittance information given' do
+        subject do
+          sct = credit_transfer
+
+          sct.add_transaction(
+            name:        'Contoso AG',
+            iban:        'CH5481230000001998736',
+            bic:         'RAIFCH22',
+            amount:      102.50,
+            structured_remittance_information: SPS::StructuredRemittanceInformation.new(
+              proprietary: 'QRR',
+              reference:   '185744810000000000200800628'
+            )
+          )
+
+          sct.to_xml
+        end
+
+        it 'should create valid XML file' do
+          expect(subject).to validate_against('pain.001.001.03.ch.02.xsd')
+        end
+
+        it 'should contain <Prtry>' do
+          expect(subject)
+            .to have_xml(
+              '//Document/CstmrCdtTrfInitn/PmtInf/CdtTrfTxInf[1]/RmtInf/Strd/CdtrRefInf/Tp/CdOrPrtry/Prtry',
+              'QRR'
             )
         end
       end
