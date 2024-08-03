@@ -1,3 +1,10 @@
+## What's Changed in v0.5.0
+* Add support for QRR type in structured remittance information by @tobischo in [#10](https://github.com/viafintech/sps_king/pull/10)
+* Allow structured remittance information optionally for credits
+* Bump version to 0.5.0
+* Add support for QRR as value for proprietary
+* Fix changelog links
+
 ## What's Changed in v0.4.0
 * Bump version to 0.4.0
 * Make charge bearer optional instead of constant set to `SLEV` by @tobischo in [#7](https://github.com/viafintech/sps_king/pull/7)
