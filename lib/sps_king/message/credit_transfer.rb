@@ -132,9 +132,24 @@ module SPS
             builder.IBAN(transaction.iban)
           end
         end
-        if transaction.remittance_information
+        if transaction.remittance_information || transaction.structured_remittance_information
           builder.RmtInf do
-            builder.Ustrd(transaction.remittance_information)
+            if transaction.remittance_information
+              builder.Ustrd(transaction.remittance_information)
+            end
+
+            if transaction.structured_remittance_information
+              builder.Strd do
+                builder.CdtrRefInf do
+                  builder.Tp do
+                    builder.CdOrPrtry do
+                      builder.Prtry(transaction.structured_remittance_information.proprietary)
+                    end
+                  end
+                  builder.Ref(transaction.structured_remittance_information.reference)
+                end
+              end
+            end
           end
         end
       end

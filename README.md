@@ -184,6 +184,19 @@ sct.add_transaction(
   # String, max. 140 char
   remittance_information: 'Rechnung vom 22.08.2013',
 
+  # OPTIONAL: Structured remittance information, in German "Strukturierter Verwendungszweck". Required for e.g. Swiss QR transfers
+  # StructuredRemittanceInformation
+  structured_remittance_information: SPS::StructuredRemittanceInformation.new(
+    # Defines how the reference field should be interpreted for Swiss Direct Debits
+    # One of these strings:
+    #   'IPI' ("IPI-Verwendungszweck")
+    #   'QRR' ("QR-Referenz")
+    proprietary: 'QRR',
+    # if proprietary is 'IPI': 20 character IPI remittance
+    # if proprietary is 'QRR': 27 character QR reference
+    reference:   '000008207791225857421286694'
+  ),
+
   # OPTIONAL: Requested execution date, in German "Ausführungstermin"
   # Date
   requested_date: Date.new(2013,9,5),

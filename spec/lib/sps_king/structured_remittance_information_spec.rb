@@ -12,7 +12,7 @@ describe SPS::StructuredRemittanceInformation do
 
   describe :proprietary do
     it 'should accept valid value' do
-      expect(SPS::StructuredRemittanceInformation).to accept('ESR', 'IPI', for: :proprietary)
+      expect(SPS::StructuredRemittanceInformation).to accept('ESR', 'IPI', 'QRR', for: :proprietary)
     end
 
     it 'should not accept invalid value' do
