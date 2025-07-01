@@ -244,12 +244,12 @@ xml_string = sct.to_xml # Use latest schema pain.001.001.03.ch.02
 
 ## Changelog
 
-https://github.com/Barzahlen/sps_king/releases
+https://github.com/viafintech/sps_king/releases
 
 
 ## Contributors
 
-https://github.com/Barzahlen/sps_king/graphs/contributors
+https://github.com/viafintech/sps_king/graphs/contributors
 
 
 ## Resources
@@ -262,6 +262,6 @@ https://github.com/Barzahlen/sps_king/graphs/contributors
 
 Released under the MIT license
 
-Copyright (c) 2018-2023 Tobias Schoknecht
+Copyright (c) 2018-2025 Tobias Schoknecht
 
 Copyright (c) 2013-2017 Georg Leciejewski (Sales King GmbH) & Georg Ledermann for portions of this project copied from sepa_king
