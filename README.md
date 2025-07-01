@@ -22,6 +22,8 @@ This gem is forked of `sepa_king` and therefore heavily inspired by the structur
 
 ## Usage
 
+## Direct Debit Initiation
+
 How to create the XML for **Direct Debit Initiation** (in German: "Lastschriften")
 
 ```ruby
@@ -131,6 +133,7 @@ sdd.add_transaction ...
 xml_string = sdd.to_xml # Use latest schema pain.008.001.02.ch.03
 ```
 
+### Credit Transfer Initiation
 
 How to create the XML for **Credit Transfer Initiation** (in German: "Überweisungen")
 
