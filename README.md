@@ -41,7 +41,7 @@ sdd = SPS::DirectDebit.new(
 
   # Creditor Identifier, in German: Gläubiger-Identifikationsnummer
   # String, max. 35 chars
-  creditor_identifier: 'ABC1W'
+  creditor_identifier: 'ABC1W',
 )
 
 # Second: Add transactions
@@ -84,7 +84,7 @@ sdd.add_transaction(
     proprietary: 'ESR',
     # if proprietary is 'ESR': 27 character ISR reference number
     # if proprietary is 'IPI': 20 character IPI remittance
-    reference:   '609323234234234353453423423'
+    reference:   '609323234234234353453423423',
   ),
 
   # Service Level
@@ -103,14 +103,14 @@ sdd.add_transaction(
 
   # OPTIONAL: Requested collection date, in German "Fälligkeitsdatum der Lastschrift"
   # Date
-  requested_date: Date.new(2013,9,5),
+  requested_date: Date.new(2013, 9, 5),
 
   # OPTIONAL: Use a different creditor account
   # CreditorAccount
   creditor_account: SPS::CreditorAccount.new(
     name:                'Creditor Inc.',
     iban:                'CH7081232000001998736',
-    creditor_identifier: '12312'
+    creditor_identifier: '12312',
   )
 
   # Specify the country & address of the debtor (The individually required fields depend on the local legal requirements)
@@ -118,11 +118,11 @@ sdd.add_transaction(
     country_code:        'CH',
     # Not required if individual fields are used
     address_line1:       'Mustergasse 123a',
-    address_line2:       '1234 Musterstadt'
+    address_line2:       '1234 Musterstadt',
     # Not required if address_line1 and address_line2 are used
     street_name:         'Mustergasse',
     post_code:           '1234',
-    town_name:           'Musterstadt'
+    town_name:           'Musterstadt',
   )
 )
 sdd.add_transaction ...
@@ -147,7 +147,7 @@ sct = SPS::CreditTransfer.new(
 
   # International Bank Account Number of the debtor
   # String, max. 34 chars
-  iban: 'CH5481230000001998736'
+  iban: 'CH5481230000001998736',
 )
 
 # Second: Add transactions
@@ -194,7 +194,7 @@ sct.add_transaction(
     proprietary: 'QRR',
     # if proprietary is 'IPI': 20 character IPI remittance
     # if proprietary is 'QRR': 27 character QR reference
-    reference:   '000008207791225857421286694'
+    reference:   '000008207791225857421286694',
   ),
 
   # OPTIONAL: Requested execution date, in German "Ausführungstermin"
@@ -209,7 +209,7 @@ sct.add_transaction(
   # One of these strings:
   #   'SEPA' ("SEPA-Zahlung")
   #   'URGP' ("Taggleiche Eilüberweisung")
-  service_level: 'URGP'
+  service_level: 'URGP',
 
   # OPTIONAL: Charge Bearer
   # One of these strings:
@@ -228,12 +228,12 @@ sct.add_transaction(
     country_code:        'CH',
     # Not required if individual fields are used
     address_line1:       'Mustergasse 123a',
-    address_line2:       '1234 Musterstadt'
+    address_line2:       '1234 Musterstadt',
     # Not required if address_line1 and address_line2 are used
     street_name:         'Mustergasse',
     building_number:     '123a',
     post_code:           '1234',
-    town_name:           'Musterstadt'
+    town_name:           'Musterstadt',
   )
 )
 sct.add_transaction ...
