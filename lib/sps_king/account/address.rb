@@ -24,9 +24,10 @@ module SPS
     validates_length_of :building_number, maximum: 16
     validates_length_of :post_code,       maximum: 16
     validates_length_of :town_name,       maximum: 35
-    validates_length_of :country_code,    is: 2
     validates_length_of :address_line1,   maximum: 70
     validates_length_of :address_line2,   maximum: 70
+    validates :country_code,    presence: true,
+                                format: { with: /\A[A-Z]{2}\z/ }
 
     def initialize(attributes = {})
       attributes.each do |name, value|
