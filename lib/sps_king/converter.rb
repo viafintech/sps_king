@@ -37,16 +37,15 @@ module SPS
           strip
       end
 
+      # @param [BigDecimal|Integer|Float|String|nil] value the value to convert
+      # @return [BigDecimal|nil] the converted value or nil if the conversion failed
       def convert_decimal(value)
-        return unless value
-        value = begin
-          BigDecimal(value.to_s)
-        rescue ArgumentError
-        end
-
-        if value && value.finite? && value > 0
-          value.round(2)
-        end
+        val = begin
+                BigDecimal(value.to_s)
+              rescue ArgumentError
+                nil
+              end
+        val.round(2) if val&.finite? && val > 0
       end
     end
   end

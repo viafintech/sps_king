@@ -63,6 +63,14 @@ describe SPS::Converter do
       expect(convert_decimal(42.12)).to eq(BigDecimal('42.12'))
     end
 
+    it "should convert numeric string to BigDecimal" do
+      expect(convert_decimal('35.21')).to eq(BigDecimal('35.21'))
+    end
+
+    it "should keep BigDecimal" do
+      expect(convert_decimal(BigDecimal('55.01'))).to eq(BigDecimal('55.01'))
+    end
+
     it 'should round' do
       expect(convert_decimal(1.345)).to eq(BigDecimal('1.35'))
     end
@@ -81,8 +89,17 @@ describe SPS::Converter do
 
     it 'should not convert invalid value' do
       expect(convert_decimal('xyz')).to eq(nil)
-      expect(convert_decimal('NaN')).to eq(nil)
-      expect(convert_decimal('Infinity')).to eq(nil)
+      expect(convert_decimal([12.2])).to eq(nil)
+      expect(convert_decimal({ value: '1.1' })).to eq(nil)
+      expect(convert_decimal(Date.new(2025))).to eq(nil)
+      expect(convert_decimal(1..10)).to eq(nil)
+      expect(convert_decimal(Float::INFINITY)).to eq(nil)
+    end
+
+    it "should not convert NaN value" do
+      nan_value = 0.0 / 0
+      expect(nan_value).to be_nan
+      expect(convert_decimal(nan_value)).to eq(nil)
     end
   end
 end
