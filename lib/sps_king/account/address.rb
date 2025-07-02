@@ -20,12 +20,12 @@ module SPS
     convert :address_line1,   to: :text
     convert :address_line2,   to: :text
 
-    validates_length_of :street_name,     maximum: 70
-    validates_length_of :building_number, maximum: 16
-    validates_length_of :post_code,       maximum: 16
-    validates_length_of :town_name,       maximum: 35
-    validates_length_of :address_line1,   maximum: 70
-    validates_length_of :address_line2,   maximum: 70
+    validates :street_name,     length: { maximum: 70 }
+    validates :building_number, length: { maximum: 16 }
+    validates :post_code,       length: { maximum: 16 }
+    validates :town_name,       length: { maximum: 35 }
+    validates :address_line1,   length: { maximum: 70 }
+    validates :address_line2,   length: { maximum: 70 }
     validates :country_code,    presence: true,
                                 format: { with: /\A[A-Z]{2}\z/ }
     # either town_name or address_line2 must be present
