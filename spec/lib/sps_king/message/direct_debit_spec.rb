@@ -479,5 +479,51 @@ describe SPS::DirectDebit do
         end
       end
     end
+
+    context 'with no encoding specified' do
+      subject do
+        sdd = direct_debit
+
+        sdd.add_transaction(
+          name:                      'Zahlemann & Söhne GbR',
+          iban:                      'CH9804835011062385295',
+          amount:                    39.99,
+          instruction:               '12',
+          reference:                 'XYZ/2013-08-ABO/12345',
+          remittance_information:    'Unsere Rechnung vom 10.08.2013',
+          structured_remittance_information: structured_remittance_information
+        )
+
+        sdd.to_xml(SPS::PAIN_008_001_02_CH_03)
+      end
+
+      it 'should include encoding in the xml string' do
+        expect(subject).to include('encoding')
+        expect(subject).to include('UTF-8')
+      end
+    end
+
+    context 'with encoding specified' do
+      subject do
+        sdd = direct_debit
+
+        sdd.add_transaction(
+          name:                      'Zahlemann & Söhne GbR',
+          iban:                      'CH9804835011062385295',
+          amount:                    39.99,
+          instruction:               '12',
+          reference:                 'XYZ/2013-08-ABO/12345',
+          remittance_information:    'Unsere Rechnung vom 10.08.2013',
+          structured_remittance_information: structured_remittance_information
+        )
+
+        sdd.to_xml(SPS::PAIN_008_001_02_CH_03, 'ISO-8859-8')
+      end
+
+      it 'should include encoding in the xml string' do
+        expect(subject).to include('encoding')
+        expect(subject).to include('ISO-8859-8')
+      end
+    end
   end
 end

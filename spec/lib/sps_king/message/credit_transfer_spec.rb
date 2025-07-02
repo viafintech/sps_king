@@ -396,5 +396,51 @@ describe SPS::CreditTransfer do
         end
       end
     end
+
+    context 'with no encoding specified' do
+      subject do
+        sct = credit_transfer
+
+        sct.add_transaction(
+          name:                   'Contoso AG',
+          bic:                    'CRESCHZZ80A',
+          iban:                   'CH9300762011623852957',
+          service_level:          'SEPA',
+          amount:                 102.50,
+          reference:              'XYZ-1234/123',
+          remittance_information: 'Rechnung vom 22.08.2013'
+        )
+
+        sct.to_xml(SPS::PAIN_001_001_03_CH_02)
+      end
+
+      it 'should include encoding in the xml string' do
+        expect(subject).to include('encoding')
+        expect(subject).to include('UTF-8')
+      end
+    end
+
+    context 'with encoding specified' do
+      subject do
+        sct = credit_transfer
+
+        sct.add_transaction(
+          name:                   'Contoso AG',
+          bic:                    'CRESCHZZ80A',
+          iban:                   'CH9300762011623852957',
+          service_level:          'SEPA',
+          amount:                 102.50,
+          reference:              'XYZ-1234/123',
+          remittance_information: 'Rechnung vom 22.08.2013'
+        )
+
+        sct.to_xml(SPS::PAIN_001_001_03_CH_02, 'ISO-8859-8')
+      end
+
+      it 'should include encoding in the xml string' do
+        expect(subject).to include('encoding')
+        expect(subject).to include('ISO-8859-8')
+      end
+    end
   end
 end

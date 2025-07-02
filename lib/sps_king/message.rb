@@ -33,11 +33,11 @@ module SPS
     end
 
     # @return [String] xml
-    def to_xml(schema_name=self.known_schemas.first)
+    def to_xml(schema_name=self.known_schemas.first, encoding='UTF-8')
       raise SPS::Error.new(errors.full_messages.join("\n")) unless valid?
       raise SPS::Error.new("Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
 
-      builder = Nokogiri::XML::Builder.new do |builder|
+      builder = Nokogiri::XML::Builder.new(encoding: encoding) do |builder|
         builder.Document(xml_schema(schema_name)) do
           builder.__send__(xml_main_tag) do
             build_group_header(builder)
