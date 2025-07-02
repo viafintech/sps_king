@@ -105,7 +105,7 @@ sdd.add_transaction(
 
   # OPTIONAL: Requested collection date, in German "Fälligkeitsdatum der Lastschrift"
   # Date
-  requested_date: Date.new(2013,9,5),
+  requested_date: Date.new(2013, 9, 5),
 
   # OPTIONAL: Use a different creditor account
   # CreditorAccount
@@ -212,7 +212,7 @@ sct.add_transaction(
   # One of these strings:
   #   'SEPA' ("SEPA-Zahlung")
   #   'URGP' ("Taggleiche Eilüberweisung")
-  service_level: 'URGP'
+  service_level: 'URGP',
 
   # OPTIONAL: Charge Bearer
   # One of these strings:
