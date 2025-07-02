@@ -28,11 +28,24 @@ module SPS
     validates_length_of :address_line2,   maximum: 70
     validates :country_code,    presence: true,
                                 format: { with: /\A[A-Z]{2}\z/ }
+    # either town_name or address_line2 must be present
+    validates :address_line2,   presence: true, if: :town_name_blank?
+    validates :town_name,       presence: true, if: :address_line2_blank?
 
     def initialize(attributes = {})
       attributes.each do |name, value|
         public_send("#{name}=", value)
       end
+    end
+
+    private
+
+    def town_name_blank?
+      town_name.blank?
+    end
+
+    def address_line2_blank?
+      address_line2.blank?
     end
   end
 end
