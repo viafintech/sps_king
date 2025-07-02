@@ -19,6 +19,12 @@ describe SPS::Address do
                         address_line2: 'X' * 71)
   end
 
+  it 'should validate country_code format' do
+    subject_valid.country_code = 'ch'
+    expect(subject_valid).not_to be_valid
+    expect(subject_valid.errors.details).to include(country_code: [{ error: :invalid, value: "ch" }])
+  end
+
   context 'when using address_line1 and address_line2' do
     it 'should initialize a new address in line mode' do
       expect(subject_valid).to be_valid
