@@ -5,6 +5,7 @@ unless defined?(ActiveModel::Model)
   # https://github.com/rails/rails/blob/master/activemodel/lib/active_model/model.rb
   module ActiveModel
     module Model
+
       def self.included(base)
         base.class_eval do
           extend  ActiveModel::Naming
@@ -14,7 +15,7 @@ unless defined?(ActiveModel::Model)
         end
       end
 
-      def initialize(params={})
+      def initialize(params = {})
         params.each do |attr, value|
           self.public_send("#{attr}=", value)
         end if params
@@ -25,6 +26,7 @@ unless defined?(ActiveModel::Model)
       def persisted?
         false
       end
+
     end
   end
 end

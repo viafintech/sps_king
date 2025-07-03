@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 describe SPS::StructuredRemittanceInformation do
@@ -16,13 +17,17 @@ describe SPS::StructuredRemittanceInformation do
     end
 
     it 'should not accept invalid value' do
-      expect(SPS::StructuredRemittanceInformation).not_to accept(nil, 'something_else', for: :proprietary)
+      expect(SPS::StructuredRemittanceInformation).not_to accept(
+                                                            nil,
+                                                            'something_else',
+                                                            for: :proprietary
+                                                          )
     end
   end
 
   describe :reference do
     it 'should accept valid value' do
-      expect(SPS::StructuredRemittanceInformation).to accept('a' * 35 , for: :reference)
+      expect(SPS::StructuredRemittanceInformation).to accept('a' * 35, for: :reference)
     end
 
     it 'should not accept invalid value' do

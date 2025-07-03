@@ -1,17 +1,19 @@
 # encoding: utf-8
+
 module SPS
   class DirectDebitTransaction < Transaction
+
+    attr_accessor :service_level,
+                  :local_instrument,
+                  :creditor_account,
+                  :debtor_address
+
     SERVICE_LEVELS = %w(CHDD CHTA)
 
     LOCAL_INSTRUMENTS_FOR_SERVICE_LEVELS = {
       'CHDD' => %w(DDCOR1 DDB2B),
       'CHTA' => %w(LSV+ BDD)
     }
-
-    attr_accessor :service_level,
-                  :local_instrument,
-                  :creditor_account,
-                  :debtor_address
 
     validates_format_of :iban, with: /\A(CH|LI)/
 
@@ -38,7 +40,7 @@ module SPS
       case schema_name
       when PAIN_008_001_02_CH_03
         self.structured_remittance_information.present? &&
-        self.structured_remittance_information.valid?
+          self.structured_remittance_information.valid?
       end
     end
 
@@ -54,5 +56,6 @@ module SPS
         end
       end
     end
+
   end
 end

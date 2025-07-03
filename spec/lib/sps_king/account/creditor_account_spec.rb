@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 describe SPS::CreditorAccount do
@@ -17,24 +18,24 @@ describe SPS::CreditorAccount do
     it 'should accept valid value' do
       expect(SPS::CreditorAccount)
         .to accept(
-          'DE98ZZZ09999999999',
-          'AT12ZZZ00000000001',
-          'IT97ZZZA1B2C3D4E5F6G7H8',
-          'NL97ZZZ123456780001',
-          'FR12ZZZ123456',
-          for: :creditor_identifier
-        )
+              'DE98ZZZ09999999999',
+              'AT12ZZZ00000000001',
+              'IT97ZZZA1B2C3D4E5F6G7H8',
+              'NL97ZZZ123456780001',
+              'FR12ZZZ123456',
+              for: :creditor_identifier
+            )
     end
 
     it 'should not accept invalid value' do
       expect(SPS::CreditorAccount)
         .not_to accept(
-          '',
-          'invalid',
-          'DE98ZZZ099999999990',
-          'DEAAAAAAAAAAAAAAAA',
-          for: :creditor_identifier
-        )
+                  '',
+                  'invalid',
+                  'DE98ZZZ099999999990',
+                  'DEAAAAAAAAAAAAAAAA',
+                  for: :creditor_identifier
+                )
     end
   end
 

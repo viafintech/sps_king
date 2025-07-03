@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 describe SPS::DirectDebitTransaction do
@@ -13,12 +14,12 @@ describe SPS::DirectDebitTransaction do
     it 'should create a valid transaction' do
       expect(
         SPS::DirectDebitTransaction.new(
-          name:                      'Zahlemann & Söhne Gbr',
-          iban:                      'CH7081232000001998736',
-          amount:                    39.99,
-          reference:                 'XYZ-1234/123',
-          instruction:               '123',
-          remittance_information:    'Vielen Dank für Ihren Einkauf!',
+          name:                              'Zahlemann & Söhne Gbr',
+          iban:                              'CH7081232000001998736',
+          amount:                            39.99,
+          reference:                         'XYZ-1234/123',
+          instruction:                       '123',
+          remittance_information:            'Vielen Dank für Ihren Einkauf!',
           structured_remittance_information: structured_remittance_information
         )
       ).to be_valid
@@ -50,7 +51,7 @@ describe SPS::DirectDebitTransaction do
 
     it 'should not allow invalid value' do
       expect(SPS::DirectDebitTransaction)
-        .not_to accept(Date.new(1995,12,21), Date.today - 1, Date.today, for: :requested_date)
+        .not_to accept(Date.new(1995, 12, 21), Date.today - 1, Date.today, for: :requested_date)
     end
   end
 end

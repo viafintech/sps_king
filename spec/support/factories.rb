@@ -1,7 +1,8 @@
 # encoding: utf-8
 
-def credit_transfer_transaction(attributes={})
-  { name:                   'Contoso AG',
+def credit_transfer_transaction(attributes = {})
+  {
+    name:                   'Contoso AG',
     bic:                    'RAIFCH22',
     iban:                   'CH5481230000001998736',
     amount:                 102.50,
@@ -10,15 +11,15 @@ def credit_transfer_transaction(attributes={})
   }.merge(attributes)
 end
 
-def direct_debt_transaction(attributes={})
+def direct_debt_transaction(attributes = {})
   {
-    name:                      'Müller & Schmidt oHG',
-    iban:                      'CH5481230000001998736',
-    amount:                    750.00,
-    instruction:               '123',
-    reference:                 'XYZ/2013-08-ABO/6789',
-    remittance_information:    'Vielen Dank für Ihren Einkauf!',
-    requested_date:            Date.today + 1,
+    name:                              'Müller & Schmidt oHG',
+    iban:                              'CH5481230000001998736',
+    amount:                            750.00,
+    instruction:                       '123',
+    reference:                         'XYZ/2013-08-ABO/6789',
+    remittance_information:            'Vielen Dank für Ihren Einkauf!',
+    requested_date:                    Date.today + 1,
     structured_remittance_information: structured_remittance_information
   }.merge(attributes)
 end

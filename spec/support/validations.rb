@@ -2,6 +2,7 @@
 # https://github.com/rspec/rspec-rails/blob/master/lib/rspec/rails/extensions/active_record/base.rb
 
 module ::ActiveModel::Validations
+
   # Extension to enhance `to have` on AR Model instances.  Calls
   # model.valid? in order to prepare the object's errors object. Accepts
   # a :context option to specify the validation context.
@@ -24,4 +25,5 @@ module ::ActiveModel::Validations
   end
 
   alias :error_on :errors_on
+
 end

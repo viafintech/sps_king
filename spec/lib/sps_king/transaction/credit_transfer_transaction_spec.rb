@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 describe SPS::CreditTransferTransaction do
@@ -33,11 +34,22 @@ describe SPS::CreditTransferTransaction do
 
   context 'Requested date' do
     it 'should allow valid value' do
-      expect(SPS::CreditTransferTransaction).to accept(nil, Date.new(1999, 1, 1), Date.today, Date.today.next, Date.today + 2, for: :requested_date)
+      expect(SPS::CreditTransferTransaction).to accept(
+                                                  nil,
+                                                  Date.new(1999, 1, 1),
+                                                  Date.today,
+                                                  Date.today.next,
+                                                  Date.today + 2,
+                                                  for: :requested_date
+                                                )
     end
 
     it 'should not allow invalid value' do
-      expect(SPS::CreditTransferTransaction).not_to accept(Date.new(1995,12,21), Date.today - 1, for: :requested_date)
+      expect(SPS::CreditTransferTransaction).not_to accept(
+                                                      Date.new(1995, 12, 21),
+                                                      Date.today - 1,
+                                                      for: :requested_date
+                                                    )
     end
   end
 

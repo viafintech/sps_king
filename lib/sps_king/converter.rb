@@ -1,6 +1,8 @@
 # encoding: utf-8
+
 module SPS
   module Converter
+
     def convert(*attributes, options)
       include InstanceMethods
 
@@ -17,18 +19,19 @@ module SPS
     end
 
     module InstanceMethods
+
       def convert_text(value)
         return unless value
 
         value.to_s.
           # Replace some special characters described as "Best practices" in Chapter 6.2 of this document:
           # http://www.europeanpaymentscouncil.eu/index.cfm/knowledge-bank/epc-documents/sepa-requirements-for-an-extended-character-set-unicode-subset-best-practices/
-          gsub('€','E').
-          gsub('@','(at)').
-          gsub('_','-').
+          gsub('€', 'E')
+          .gsub('@', '(at)')
+          .gsub('_', '-').
 
           # Replace linebreaks by spaces
-          gsub(/\n+/,' ').
+          gsub(/\n+/, ' ').
 
           # Remove all invalid characters
           gsub(/[^a-zA-Z0-9ÄÖÜäöüß&*$%\ \'\:\?\,\-\(\+\.\)\/]/, '').
@@ -41,12 +44,14 @@ module SPS
       # @return [BigDecimal|nil] the converted value or nil if the conversion failed
       def convert_decimal(value)
         val = begin
-                BigDecimal(value.to_s)
-              rescue ArgumentError
-                nil
-              end
+          BigDecimal(value.to_s)
+        rescue ArgumentError
+          nil
+        end
         val.round(2) if val&.finite? && val > 0
       end
+
     end
+
   end
 end

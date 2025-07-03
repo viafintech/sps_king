@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 describe SPS::Account do
@@ -12,7 +13,12 @@ describe SPS::Account do
 
   describe :name do
     it 'should accept valid value' do
-      expect(SPS::Account).to accept('Gläubiger GmbH', 'Zahlemann & Söhne GbR', 'X' * 70, for: :name)
+      expect(SPS::Account).to accept(
+                                'Gläubiger GmbH',
+                                'Zahlemann & Söhne GbR',
+                                'X' * 70,
+                                for: :name
+                              )
     end
 
     it 'should not accept invalid value' do
@@ -22,7 +28,11 @@ describe SPS::Account do
 
   describe :iban do
     it 'should accept valid value' do
-      expect(SPS::Account).to accept('DE21500500009876543210', 'PL61109010140000071219812874', for: :iban)
+      expect(SPS::Account).to accept(
+                                'DE21500500009876543210',
+                                'PL61109010140000071219812874',
+                                for: :iban
+                              )
     end
 
     it 'should not accept invalid value' do

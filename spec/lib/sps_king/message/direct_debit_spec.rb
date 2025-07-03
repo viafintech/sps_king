@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 describe SPS::DirectDebit do
@@ -45,7 +46,12 @@ describe SPS::DirectDebit do
 
     it 'returns the id of the batch where the given transactions belongs to (2 batches)' do
       direct_debit.add_transaction(direct_debt_transaction(reference: "EXAMPLE REFERENCE 1"))
-      direct_debit.add_transaction(direct_debt_transaction(reference: "EXAMPLE REFERENCE 2", requested_date: Date.today.next.next))
+      direct_debit.add_transaction(
+        direct_debt_transaction(
+          reference:      "EXAMPLE REFERENCE 2",
+          requested_date: Date.today.next.next
+        )
+      )
       direct_debit.add_transaction(direct_debt_transaction(reference: "EXAMPLE REFERENCE 3"))
 
       expect(direct_debit.batch_id("EXAMPLE REFERENCE 1")).to match(/#{message_id_regex}\/1/)
@@ -57,7 +63,12 @@ describe SPS::DirectDebit do
   describe :batches do
     it 'returns an array of batch ids in the sepa message' do
       direct_debit.add_transaction(direct_debt_transaction(reference: "EXAMPLE REFERENCE 1"))
-      direct_debit.add_transaction(direct_debt_transaction(reference: "EXAMPLE REFERENCE 2", requested_date: Date.today.next.next))
+      direct_debit.add_transaction(
+        direct_debt_transaction(
+          reference:      "EXAMPLE REFERENCE 2",
+          requested_date: Date.today.next.next
+        )
+      )
       direct_debit.add_transaction(direct_debt_transaction(reference: "EXAMPLE REFERENCE 3"))
 
       expect(direct_debit.batches.size).to eq(2)
@@ -78,25 +89,25 @@ describe SPS::DirectDebit do
     context 'setting debtor address with adrline' do
       subject do
         sdd = SPS::DirectDebit.new(
-          name:                'Gläubiger GmbH',
-          iban:                'CH7081232000001998736',
-          creditor_identifier: 'ABC1W'
-        )
+                name:                'Gläubiger GmbH',
+                iban:                'CH7081232000001998736',
+                creditor_identifier: 'ABC1W'
+              )
 
         sda = SPS::DebtorAddress.new(
-          country_code:  'CH',
-          address_line1: 'Mustergasse 123',
-          address_line2: '1234 Musterstadt'
-        )
+                country_code:  'CH',
+                address_line1: 'Mustergasse 123',
+                address_line2: '1234 Musterstadt'
+              )
 
         sdd.add_transaction(
-          name:                      'Zahlemann & Söhne GbR',
-          iban:                      'CH9804835011062385295',
-          amount:                    39.99,
-          instruction:               '12',
-          reference:                 'XYZ/2013-08-ABO/12345',
-          remittance_information:    'Unsere Rechnung vom 10.08.2013',
-          debtor_address:            sda,
+          name:                              'Zahlemann & Söhne GbR',
+          iban:                              'CH9804835011062385295',
+          amount:                            39.99,
+          instruction:                       '12',
+          reference:                         'XYZ/2013-08-ABO/12345',
+          remittance_information:            'Unsere Rechnung vom 10.08.2013',
+          debtor_address:                    sda,
           structured_remittance_information: structured_remittance_information
         )
 
@@ -112,26 +123,26 @@ describe SPS::DirectDebit do
     context 'setting debtor address with structured fields' do
       subject do
         sdd = SPS::DirectDebit.new(
-          name:                'Gläubiger GmbH',
-          iban:                'CH7081232000001998736',
-          creditor_identifier: 'ABC1W'
-        )
+                name:                'Gläubiger GmbH',
+                iban:                'CH7081232000001998736',
+                creditor_identifier: 'ABC1W'
+              )
 
         sda = SPS::DebtorAddress.new(
-          country_code: 'CH',
-          street_name:  'Mustergasse 123',
-          post_code:    '1234',
-          town_name:    'Musterstadt'
-        )
+                country_code: 'CH',
+                street_name:  'Mustergasse 123',
+                post_code:    '1234',
+                town_name:    'Musterstadt'
+              )
 
         sdd.add_transaction(
-          name:                      'Zahlemann & Söhne GbR',
-          iban:                      'CH9804835011062385295',
-          amount:                    39.99,
-          instruction:               '12',
-          reference:                 'XYZ/2013-08-ABO/12345',
-          remittance_information:    'Unsere Rechnung vom 10.08.2013',
-          debtor_address:            sda,
+          name:                              'Zahlemann & Söhne GbR',
+          iban:                              'CH9804835011062385295',
+          amount:                            39.99,
+          instruction:                       '12',
+          reference:                         'XYZ/2013-08-ABO/12345',
+          remittance_information:            'Unsere Rechnung vom 10.08.2013',
+          debtor_address:                    sda,
           structured_remittance_information: structured_remittance_information
         )
 
@@ -151,35 +162,35 @@ describe SPS::DirectDebit do
 
         let(:direct_debit) do
           sdd = SPS::DirectDebit.new(
-            name:                      'Muster AG',
-            isr_participant_number:    '010001456',
-            iban:                      creditor_iban,
-            creditor_identifier:       'ABC1W'
-          )
+                  name:                   'Muster AG',
+                  isr_participant_number: '010001456',
+                  iban:                   creditor_iban,
+                  creditor_identifier:    'ABC1W'
+                )
 
           sda = SPS::DebtorAddress.new(
-            country_code: 'CH',
-            address_line1: 'Mustergasse 123',
-            address_line2: '1234 Musterstadt'
-          )
+                  country_code:  'CH',
+                  address_line1: 'Mustergasse 123',
+                  address_line2: '1234 Musterstadt'
+                )
 
           sdd.add_transaction(
             {
-              name:                      'HANS TESTER',
-              iban:                      debtior_iban,
-              currency:                  'CHF',
-              amount:                    '100.0',
-              remittance_information:    'According to invoice 4712',
-              reference:                 'XYZ/2013-08-ABO/12345',
-              service_level:             service_level,
-              local_instrument:          local_instrument,
-              requested_date:            requested_date,
-              instruction:               23,
-              debtor_address:            sda,
+              name:                              'HANS TESTER',
+              iban:                              debtior_iban,
+              currency:                          'CHF',
+              amount:                            '100.0',
+              remittance_information:            'According to invoice 4712',
+              reference:                         'XYZ/2013-08-ABO/12345',
+              service_level:                     service_level,
+              local_instrument:                  local_instrument,
+              requested_date:                    requested_date,
+              instruction:                       23,
+              debtor_address:                    sda,
               structured_remittance_information: SPS::StructuredRemittanceInformation.new(
-                proprietary: 'ESR',
-                reference:   '185744810000000000200800628'
-              )
+                                                   proprietary: 'ESR',
+                                                   reference:   '185744810000000000200800628'
+                                                 )
             }.merge(additional_fields)
           )
 
@@ -199,15 +210,23 @@ describe SPS::DirectDebit do
           end
 
           it 'should have creditor identifier' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/GrpHdr/InitgPty/Id/OrgId/Othr/Id', direct_debit.account.creditor_identifier)
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/GrpHdr/InitgPty/Id/OrgId/Othr/Id', direct_debit.account.creditor_identifier
+                               )
           end
 
           it 'should contain <PmtInfId>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/PmtInfId', /#{message_id_regex}\/1/)
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/PmtInfId',
+                                 /#{message_id_regex}\/1/
+                               )
           end
 
           it 'should contain <ReqdColltnDt>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/ReqdColltnDt', requested_date.iso8601)
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/ReqdColltnDt',
+                                 requested_date.iso8601
+                               )
           end
 
           it 'should contain <PmtMtd>' do
@@ -231,12 +250,19 @@ describe SPS::DirectDebit do
           end
 
           it 'should contain <CdtrAcct>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/CdtrAcct/Id/IBAN', 'CH7081232000001998736')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/CdtrAcct/Id/IBAN',
+                                 'CH7081232000001998736'
+                               )
           end
 
           it 'should contain <CdtrAgt>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/CdtrAgt/FinInstnId/ClrSysMmbId/MmbId', '81232')
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/CdtrAgt/FinInstnId/Othr/Id', '010001456')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/CdtrAgt/FinInstnId/ClrSysMmbId/MmbId', '81232'
+                               )
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/CdtrAgt/FinInstnId/Othr/Id', '010001456'
+                               )
           end
 
           it 'should not contain <ChrgBr>' do
@@ -245,8 +271,12 @@ describe SPS::DirectDebit do
 
           context 'when service_level is CHTA' do
             it 'should contain <CdtrSchmeId>' do
-              expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/Id', direct_debit.account.creditor_identifier)
-              expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/SchmeNm/Prtry', 'CHLS')
+              expect(subject).to have_xml(
+                                   '//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/Id', direct_debit.account.creditor_identifier
+                                 )
+              expect(subject).to have_xml(
+                                   '//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/SchmeNm/Prtry', 'CHLS'
+                                 )
             end
           end
 
@@ -255,43 +285,63 @@ describe SPS::DirectDebit do
             let(:local_instrument) { 'DDCOR1' }
 
             it 'should contain <CdtrSchmeId>' do
-              expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/Id', direct_debit.account.creditor_identifier)
-              expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/SchmeNm/Prtry', 'CHDD')
+              expect(subject).to have_xml(
+                                   '//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/Id', direct_debit.account.creditor_identifier
+                                 )
+              expect(subject).to have_xml(
+                                   '//Document/CstmrDrctDbtInitn/PmtInf/CdtrSchmeId/Id/PrvtId/Othr/SchmeNm/Prtry', 'CHDD'
+                                 )
             end
           end
 
           it 'should contain <EndToEndId>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/PmtId/EndToEndId', 'XYZ/2013-08-ABO/12345')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/PmtId/EndToEndId', 'XYZ/2013-08-ABO/12345'
+                               )
           end
 
           it 'should contain <InstdAmt>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/InstdAmt', '100.00')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/InstdAmt', '100.00'
+                               )
           end
 
           it 'should contain <DbtrAgt>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/DbtrAgt/FinInstnId/ClrSysMmbId/MmbId', '4835')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/DbtrAgt/FinInstnId/ClrSysMmbId/MmbId', '4835'
+                               )
           end
 
           it 'should contain <Dbtr>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/Dbtr/Nm', 'HANS TESTER')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/Dbtr/Nm', 'HANS TESTER'
+                               )
           end
 
           it 'should contain <DbtrAcct>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/DbtrAcct/Id/IBAN', 'CH9804835011062385295')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/DbtrAcct/Id/IBAN', 'CH9804835011062385295'
+                               )
           end
 
           it 'should contain <Ustrd>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/RmtInf/Ustrd', 'According to invoice 4712')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/RmtInf/Ustrd', 'According to invoice 4712'
+                               )
           end
 
           it 'should contain <Strd>' do
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/RmtInf/Strd/CdtrRefInf/Tp/CdOrPrtry/Prtry', 'ESR')
-            expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/RmtInf/Strd/CdtrRefInf/Ref', '185744810000000000200800628')
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/RmtInf/Strd/CdtrRefInf/Tp/CdOrPrtry/Prtry', 'ESR'
+                               )
+            expect(subject).to have_xml(
+                                 '//Document/CstmrDrctDbtInitn/PmtInf/DrctDbtTxInf[1]/RmtInf/Strd/CdtrRefInf/Ref', '185744810000000000200800628'
+                               )
           end
         end
 
         context 'with service_level CHDD' do
-          let(:service_level)    { 'CHDD' }
+          let(:service_level) { 'CHDD' }
 
           context 'with local_instrument DDCOR1' do
             let(:local_instrument) { 'DDCOR1' }
@@ -346,22 +396,22 @@ describe SPS::DirectDebit do
           sdd = direct_debit
 
           sdd.add_transaction(
-            name:                      'Zahlemann & Söhne GbR',
-            iban:                      'CH9804835011062385295',
-            amount:                    39.99,
-            instruction:               '12',
-            reference:                 'XYZ/2013-08-ABO/12345',
-            remittance_information:    'Unsere Rechnung vom 10.08.2013',
+            name:                              'Zahlemann & Söhne GbR',
+            iban:                              'CH9804835011062385295',
+            amount:                            39.99,
+            instruction:                       '12',
+            reference:                         'XYZ/2013-08-ABO/12345',
+            remittance_information:            'Unsere Rechnung vom 10.08.2013',
             structured_remittance_information: structured_remittance_information
           )
 
           sdd.add_transaction(
-            name:                      'Meier & Schulze oHG',
-            iban:                      'CH7081232000001998736',
-            amount:                    750.00,
-            instruction:               '34',
-            reference:                 'XYZ/2013-08-ABO/6789',
-            remittance_information:    'Vielen Dank für Ihren Einkauf!',
+            name:                              'Meier & Schulze oHG',
+            iban:                              'CH7081232000001998736',
+            amount:                            750.00,
+            instruction:                       '34',
+            reference:                         'XYZ/2013-08-ABO/6789',
+            remittance_information:            'Vielen Dank für Ihren Einkauf!',
             structured_remittance_information: structured_remittance_information
           )
 
@@ -373,7 +423,10 @@ describe SPS::DirectDebit do
         end
 
         it 'should contain <ReqdColltnDt>' do
-          expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf/ReqdColltnDt', Date.new(1999, 1, 1).iso8601)
+          expect(subject).to have_xml(
+                               '//Document/CstmrDrctDbtInitn/PmtInf/ReqdColltnDt',
+                               Date.new(1999, 1, 1).iso8601
+                             )
         end
       end
 
@@ -389,15 +442,27 @@ describe SPS::DirectDebit do
         end
 
         it 'should contain two payment_informations with <ReqdColltnDt>' do
-          expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf[1]/ReqdColltnDt', (Date.today + 1).iso8601)
-          expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf[2]/ReqdColltnDt', (Date.today + 2).iso8601)
+          expect(subject).to have_xml(
+                               '//Document/CstmrDrctDbtInitn/PmtInf[1]/ReqdColltnDt',
+                               (Date.today + 1).iso8601
+                             )
+          expect(subject).to have_xml(
+                               '//Document/CstmrDrctDbtInitn/PmtInf[2]/ReqdColltnDt',
+                               (Date.today + 2).iso8601
+                             )
 
           expect(subject).not_to have_xml('//Document/CstmrDrctDbtInitn/PmtInf[3]')
         end
 
         it 'should contain two payment_informations with different <PmtInfId>' do
-          expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf[1]/PmtInfId', /#{message_id_regex}\/1/)
-          expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf[2]/PmtInfId', /#{message_id_regex}\/2/)
+          expect(subject).to have_xml(
+                               '//Document/CstmrDrctDbtInitn/PmtInf[1]/PmtInfId',
+                               /#{message_id_regex}\/1/
+                             )
+          expect(subject).to have_xml(
+                               '//Document/CstmrDrctDbtInitn/PmtInf[2]/PmtInfId',
+                               /#{message_id_regex}\/2/
+                             )
         end
       end
 
@@ -426,7 +491,6 @@ describe SPS::DirectDebit do
         subject do
           sdd = direct_debit
 
-
           sdd.add_transaction(direct_debt_transaction.merge(local_instrument: 'DDCOR1'))
 
           sdd
@@ -436,9 +500,9 @@ describe SPS::DirectDebit do
           expect {
             subject.add_transaction(direct_debt_transaction.merge(local_instrument: 'DDB2B'))
           }.to raise_error(
-            ArgumentError,
-            'Local instrument is not correct. Must be one of LSV+, BDD'
-          )
+                 ArgumentError,
+                 'Local instrument is not correct. Must be one of LSV+, BDD'
+               )
         end
       end
 
@@ -450,10 +514,10 @@ describe SPS::DirectDebit do
           sdd.add_transaction(
             direct_debt_transaction.merge(
               creditor_account: SPS::CreditorAccount.new(
-                name:                'Creditor Inc.',
-                iban:                'CH5604835012345678009',
-                creditor_identifier: 'ABC1W'
-              )
+                                  name:                'Creditor Inc.',
+                                  iban:                'CH5604835012345678009',
+                                  creditor_identifier: 'ABC1W'
+                                )
             )
           )
 
@@ -461,8 +525,14 @@ describe SPS::DirectDebit do
         end
 
         it 'should contain two payment_informations with <Cdtr>' do
-          expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf[1]/Cdtr/Nm', 'Gläubiger GmbH')
-          expect(subject).to have_xml('//Document/CstmrDrctDbtInitn/PmtInf[2]/Cdtr/Nm', 'Creditor Inc.')
+          expect(subject).to have_xml(
+                               '//Document/CstmrDrctDbtInitn/PmtInf[1]/Cdtr/Nm',
+                               'Gläubiger GmbH'
+                             )
+          expect(subject).to have_xml(
+                               '//Document/CstmrDrctDbtInitn/PmtInf[2]/Cdtr/Nm',
+                               'Creditor Inc.'
+                             )
         end
       end
 
@@ -485,12 +555,12 @@ describe SPS::DirectDebit do
         sdd = direct_debit
 
         sdd.add_transaction(
-          name:                      'Zahlemann & Söhne GbR',
-          iban:                      'CH9804835011062385295',
-          amount:                    39.99,
-          instruction:               '12',
-          reference:                 'XYZ/2013-08-ABO/12345',
-          remittance_information:    'Unsere Rechnung vom 10.08.2013',
+          name:                              'Zahlemann & Söhne GbR',
+          iban:                              'CH9804835011062385295',
+          amount:                            39.99,
+          instruction:                       '12',
+          reference:                         'XYZ/2013-08-ABO/12345',
+          remittance_information:            'Unsere Rechnung vom 10.08.2013',
           structured_remittance_information: structured_remittance_information
         )
 
@@ -508,12 +578,12 @@ describe SPS::DirectDebit do
         sdd = direct_debit
 
         sdd.add_transaction(
-          name:                      'Zahlemann & Söhne GbR',
-          iban:                      'CH9804835011062385295',
-          amount:                    39.99,
-          instruction:               '12',
-          reference:                 'XYZ/2013-08-ABO/12345',
-          remittance_information:    'Unsere Rechnung vom 10.08.2013',
+          name:                              'Zahlemann & Söhne GbR',
+          iban:                              'CH9804835011062385295',
+          amount:                            39.99,
+          instruction:                       '12',
+          reference:                         'XYZ/2013-08-ABO/12345',
+          remittance_information:            'Unsere Rechnung vom 10.08.2013',
           structured_remittance_information: structured_remittance_information
         )
 

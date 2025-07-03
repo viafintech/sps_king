@@ -1,6 +1,9 @@
 # encoding: utf-8
+
 module SPS
+
   class IBANValidator < ActiveModel::Validator
+
     # IBAN2007Identifier (taken from schema)
     REGEX = /\A[A-Z]{2,2}[0-9]{2,2}[a-zA-Z0-9]{1,30}\z/
 
@@ -12,9 +15,11 @@ module SPS
         record.errors.add(field_name, :invalid, message: options[:message])
       end
     end
+
   end
 
   class BICValidator < ActiveModel::Validator
+
     # AnyBICIdentifier (taken from schema)
     REGEX = /\A[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}\z/
 
@@ -28,9 +33,11 @@ module SPS
         end
       end
     end
+
   end
 
   class CreditorIdentifierValidator < ActiveModel::Validator
+
     REGEX = /\A[a-zA-Z]{2,2}[0-9]{2,2}([A-Za-z0-9]|[\+|\?|\/|\-|\:|\(|\)|\.|,|']){3,3}([A-Za-z0-9]|[\+|\?|\/|\-|:|\(|\)|\.|,|']){1,28}\z|\A[A-Z0-9]{5,5}\z/
 
     def validate(record)
@@ -51,5 +58,7 @@ module SPS
       end
       ok
     end
+
   end
+
 end

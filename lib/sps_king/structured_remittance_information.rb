@@ -1,5 +1,6 @@
 module SPS
   class StructuredRemittanceInformation
+
     include ActiveModel::Validations
     extend Converter
 
@@ -16,5 +17,6 @@ module SPS
         public_send("#{name}=", value)
       end
     end
+
   end
 end

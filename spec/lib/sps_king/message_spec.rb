@@ -1,13 +1,18 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 class DummyTransaction < SPS::Transaction
+
   def valid?; true end
+
 end
 
 class DummyMessage < SPS::Message
+
   self.account_class = SPS::Account
   self.transaction_class = DummyTransaction
+
 end
 
 describe SPS::Message do
@@ -53,8 +58,9 @@ describe SPS::Message do
 
     describe 'setter' do
       it 'should accept valid ID' do
-        [ 'gid://myMoneyApp/Payment/15108', # for example, Rails Global ID could be a candidate
-          Time.now.to_f.to_s                # or a time based string
+        [
+          'gid://myMoneyApp/Payment/15108', # for example, Rails Global ID could be a candidate
+          Time.now.to_f.to_s # or a time based string
         ].each do |valid_msgid|
           subject.message_identification = valid_msgid
           expect(subject.message_identification).to eq(valid_msgid)
@@ -62,7 +68,8 @@ describe SPS::Message do
       end
 
       it 'should deny invalid string' do
-        [ 'my_MESSAGE_ID/123', # contains underscore
+        [
+          'my_MESSAGE_ID/123', # contains underscore
           '',                  # blank string
           'üöäß',              # non-ASCII chars
           '1' * 36             # too long
@@ -74,7 +81,8 @@ describe SPS::Message do
       end
 
       it 'should deny argument other than String' do
-        [ 123,
+        [
+          123,
           nil,
           :foo
         ].each do |arg|
@@ -86,7 +94,7 @@ describe SPS::Message do
     end
   end
 
-describe :creation_date_time do
+  describe :creation_date_time do
     subject { DummyMessage.new }
 
     describe 'getter' do
@@ -97,14 +105,20 @@ describe :creation_date_time do
 
     describe 'setter' do
       it 'should accept date time strings' do
-        ['2017-01-05T12:28:52', '2017-01-05T12:28:52Z', '2017-01-05 12:28:52', '2017-01-05T12:28:52+01:00'].each do |valid_dt|
+        [
+          '2017-01-05T12:28:52',
+          '2017-01-05T12:28:52Z',
+          '2017-01-05 12:28:52',
+          '2017-01-05T12:28:52+01:00'
+        ].each do |valid_dt|
           subject.creation_date_time = valid_dt
           expect(subject.creation_date_time).to eq(valid_dt)
         end
       end
 
       it 'should deny invalid string' do
-        [ 'an arbitrary string',
+        [
+          'an arbitrary string',
           ''
         ].each do |arg|
           expect {
@@ -114,7 +128,8 @@ describe :creation_date_time do
       end
 
       it 'should deny argument other than String' do
-        [ 123,
+        [
+          123,
           nil,
           :foo
         ].each do |arg|

@@ -1,6 +1,8 @@
 # encoding: utf-8
+
 module SPS
   class Address
+
     include ActiveModel::Validations
     extend Converter
 
@@ -26,8 +28,9 @@ module SPS
     validates :town_name,       length: { maximum: 35 }
     validates :address_line1,   length: { maximum: 70 }
     validates :address_line2,   length: { maximum: 70 }
-    validates :country_code,    presence: true,
-                                format: { with: /\A[A-Z]{2}\z/ }
+    validates :country_code,
+              presence: true,
+              format:   { with: /\A[A-Z]{2}\z/ }
     # either town_name or address_line2 must be present
     validates :address_line2,   presence: true, if: :town_name_blank?
     validates :town_name,       presence: true, if: :address_line2_blank?
@@ -40,12 +43,13 @@ module SPS
 
     private
 
-    def town_name_blank?
-      town_name.blank?
-    end
+      def town_name_blank?
+        town_name.blank?
+      end
 
-    def address_line2_blank?
-      address_line2.blank?
-    end
+      def address_line2_blank?
+        address_line2.blank?
+      end
+
   end
 end

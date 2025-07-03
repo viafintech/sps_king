@@ -1,6 +1,8 @@
 # encoding: utf-8
+
 module SPS
   class CreditTransferTransaction < Transaction
+
     attr_accessor :service_level,
                   :creditor_address,
                   :category_purpose,
@@ -20,5 +22,6 @@ module SPS
         !self.bic.nil?
       end
     end
+
   end
 end

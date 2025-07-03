@@ -1,10 +1,12 @@
 # encoding: utf-8
 
 module SPS
+
   PAIN_008_001_02_CH_03 = 'pain.008.001.02.ch.03'
   PAIN_001_001_03_CH_02 = 'pain.001.001.03.ch.02'
 
   class Message
+
     include ActiveModel::Validations
 
     attr_reader :account, :grouped_transactions
@@ -16,7 +18,7 @@ module SPS
 
     class_attribute :account_class, :transaction_class, :xml_main_tag, :known_schemas
 
-    def initialize(account_options={})
+    def initialize(account_options = {})
       @grouped_transactions = {}
       @account = account_class.new(account_options)
     end
@@ -24,6 +26,7 @@ module SPS
     def add_transaction(options)
       transaction = transaction_class.new(options)
       raise ArgumentError.new(transaction.errors.full_messages.join("\n")) unless transaction.valid?
+
       @grouped_transactions[transaction_group(transaction)] ||= []
       @grouped_transactions[transaction_group(transaction)] << transaction
     end
@@ -33,7 +36,7 @@ module SPS
     end
 
     # @return [String] xml
-    def to_xml(schema_name=self.known_schemas.first, encoding='UTF-8')
+    def to_xml(schema_name = self.known_schemas.first, encoding = 'UTF-8')
       raise SPS::Error.new(errors.full_messages.join("\n")) unless valid?
       raise SPS::Error.new("Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
 
@@ -50,7 +53,7 @@ module SPS
       builder.to_xml
     end
 
-    def amount_total(selected_transactions=transactions)
+    def amount_total(selected_transactions = transactions)
       selected_transactions.inject(0) { |sum, t| sum + t.amount }
     end
 
@@ -58,10 +61,10 @@ module SPS
       raise ArgumentError.new("Schema #{schema_name} is unknown!") unless self.known_schemas.include?(schema_name)
 
       case schema_name
-        when PAIN_001_001_03_CH_02
-          transactions.all? { |t| t.schema_compatible?(schema_name) }
-        when PAIN_008_001_02_CH_03
-          transactions.all? { |t| t.schema_compatible?(schema_name) } &&
+      when PAIN_001_001_03_CH_02
+        transactions.all? { |t| t.schema_compatible?(schema_name) }
+      when PAIN_008_001_02_CH_03
+        transactions.all? { |t| t.schema_compatible?(schema_name) } &&
           !account.iban.to_s.match(/^(CH|LI)/).nil? # Only allowed for switzerland or liechtenstein
       end
     end
@@ -111,53 +114,56 @@ module SPS
       grouped_transactions.keys.collect { |group| payment_information_identification(group) }
     end
 
-  private
-    # @return {Hash<Symbol=>String>} xml schema information used in output xml
-    def xml_schema(schema_name)
-      {
-        :xmlns                => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd",
-        :'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
-        :'xsi:schemaLocation' => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd #{schema_name}.xsd"
-      }
-    end
+    private
 
-    def build_group_header(builder)
-      builder.GrpHdr do
-        builder.MsgId(message_identification)
-        builder.CreDtTm(creation_date_time)
-        builder.NbOfTxs(transactions.length)
-        builder.CtrlSum('%.2f' % amount_total)
-        builder.InitgPty do
-          builder.Nm(account.name)
-          builder.Id do
-            builder.OrgId do
-              builder.Othr do
-                builder.Id(account.creditor_identifier)
+      # @return {Hash<Symbol=>String>} xml schema information used in output xml
+      def xml_schema(schema_name)
+        {
+          :xmlns                => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd",
+          :'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
+          :'xsi:schemaLocation' => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd #{schema_name}.xsd"
+        }
+      end
+
+      def build_group_header(builder)
+        builder.GrpHdr do
+          builder.MsgId(message_identification)
+          builder.CreDtTm(creation_date_time)
+          builder.NbOfTxs(transactions.length)
+          builder.CtrlSum('%.2f' % amount_total)
+          builder.InitgPty do
+            builder.Nm(account.name)
+            builder.Id do
+              builder.OrgId do
+                builder.Othr do
+                  builder.Id(account.creditor_identifier)
+                end
               end
-            end
-          end if account.respond_to? :creditor_identifier
+            end if account.respond_to? :creditor_identifier
+          end
         end
       end
-    end
 
-    # Unique and consecutive identifier (used for the <PmntInf> blocks)
-    def payment_information_identification(group)
-      "#{message_identification}/#{grouped_transactions.keys.index(group)+1}"
-    end
+      # Unique and consecutive identifier (used for the <PmntInf> blocks)
+      def payment_information_identification(group)
+        "#{message_identification}/#{grouped_transactions.keys.index(group) + 1}"
+      end
 
-    # Returns a key to determine the group to which the transaction belongs
-    def transaction_group(transaction)
-      transaction
-    end
+      # Returns a key to determine the group to which the transaction belongs
+      def transaction_group(transaction)
+        transaction
+      end
 
-    def validate_final_document!(document, schema_name)
-      xsd = Nokogiri::XML::Schema(
-              File.read(
-                File.expand_path("../../../lib/schema/#{schema_name}.xsd", __FILE__)
+      def validate_final_document!(document, schema_name)
+        xsd = Nokogiri::XML::Schema(
+                File.read(
+                  File.expand_path("../../../lib/schema/#{schema_name}.xsd", __FILE__)
+                )
               )
-            )
-      errors = xsd.validate(document).map { |error| error.message }
-      raise SPS::Error.new("Incompatible with schema #{schema_name}: #{errors.join(', ')}") if errors.any?
-    end
+        errors = xsd.validate(document).map { |error| error.message }
+        raise SPS::Error.new("Incompatible with schema #{schema_name}: #{errors.join(', ')}") if errors.any?
+      end
+
   end
+
 end

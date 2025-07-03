@@ -1,4 +1,5 @@
 # encoding: utf-8
+
 require 'spec_helper'
 
 describe SPS::Converter do
@@ -8,7 +9,9 @@ describe SPS::Converter do
     context 'when the conversion method does not exist' do
       it 'raises an ArgumentError' do
         class DummyForConverter
+
           extend SPS::Converter
+
         end
 
         expect {
@@ -31,10 +34,10 @@ describe SPS::Converter do
     end
 
     it 'should convert line breaks' do
-      expect(convert_text("one\ntwo"))    .to eq('one two')
-      expect(convert_text("one\ntwo\n"))  .to eq('one two')
+      expect(convert_text("one\ntwo")).to eq('one two')
+      expect(convert_text("one\ntwo\n")).to eq('one two')
       expect(convert_text("\none\ntwo\n")).to eq('one two')
-      expect(convert_text("one\n\ntwo"))  .to eq('one two')
+      expect(convert_text("one\n\ntwo")).to eq('one two')
     end
 
     it 'should convert number' do

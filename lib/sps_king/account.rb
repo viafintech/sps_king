@@ -1,6 +1,8 @@
 # encoding: utf-8
+
 module SPS
   class Account
+
     include ActiveModel::Validations
     extend Converter
 
@@ -20,5 +22,6 @@ module SPS
         public_send("#{name}=", value)
       end
     end
+
   end
 end

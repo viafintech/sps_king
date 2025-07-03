@@ -1,10 +1,10 @@
 # encoding: utf-8
+
 module SPS
   class Transaction
+
     include ActiveModel::Validations
     extend Converter
-
-    DEFAULT_REQUESTED_DATE = Date.new(1999, 1, 1).freeze
 
     attr_accessor :name,
                   :iban,
@@ -19,6 +19,8 @@ module SPS
                   :currency,
                   :debtor_address,
                   :creditor_address
+
+    DEFAULT_REQUESTED_DATE = Date.new(1999, 1, 1).freeze
 
     convert :name, :instruction, :reference, :remittance_information, to: :text
     convert :amount, to: :decimal
@@ -48,12 +50,13 @@ module SPS
 
     protected
 
-    def validate_requested_date_after(min_requested_date)
-      return unless requested_date.is_a?(Date)
+      def validate_requested_date_after(min_requested_date)
+        return unless requested_date.is_a?(Date)
 
-      if requested_date != DEFAULT_REQUESTED_DATE && requested_date < min_requested_date
-        errors.add(:requested_date, "must be greater or equal to #{min_requested_date}, or nil")
+        if requested_date != DEFAULT_REQUESTED_DATE && requested_date < min_requested_date
+          errors.add(:requested_date, "must be greater or equal to #{min_requested_date}, or nil")
+        end
       end
-    end
+
   end
 end
