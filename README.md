@@ -11,7 +11,7 @@ This gem is forked of `sepa_king` and therefore heavily inspired by the structur
 
 ## Requirements
 
-* Ruby 2.7 or newer
+* Ruby 3.0 or newer
 * ActiveModel 5.0 or newer
 
 
@@ -190,7 +190,7 @@ sct.add_transaction(
   # OPTIONAL: Structured remittance information, in German "Strukturierter Verwendungszweck". Required for e.g. Swiss QR transfers
   # StructuredRemittanceInformation
   structured_remittance_information: SPS::StructuredRemittanceInformation.new(
-    # Defines how the reference field should be interpreted for Swiss Direct Debits
+    # Defines how the reference field should be interpreted for Swiss Credit Transfers
     # One of these strings:
     #   'IPI' ("IPI-Verwendungszweck")
     #   'QRR' ("QR-Referenz")
