@@ -1,7 +1,9 @@
-## Pending for Release
+## What's Changed in v0.5.0
 * Update covered ruby and activemodel versions for testing
 * Improvement of the convert_decimal function by @casaper in [#14](https://github.com/viafintech/sps_king/pull/14)
-* Standardized creditor and debitor addresses and added stricter validation in [#16](https://github.com/viafintech/sps_king/pull/16)
+* Standardized creditor and debitor addresses and added stricter validation by @casapar in [#16](https://github.com/viafintech/sps_king/pull/16)
+
+**Full Changelog**: https://github.com/viafintech/sps_king/compare/v0.5.0...v0.6.0
 
 ## What's Changed in v0.5.0
 * Add support for QRR type in structured remittance information by @tobischo in [#10](https://github.com/viafintech/sps_king/pull/10)
