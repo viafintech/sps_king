@@ -1,4 +1,4 @@
-## What's Changed in v0.5.0
+## What's Changed in v0.6.0
 * Update covered ruby and activemodel versions for testing
 * Improvement of the convert_decimal function by @casaper in [#14](https://github.com/viafintech/sps_king/pull/14)
 * Standardized creditor and debitor addresses and added stricter validation by @casapar in [#16](https://github.com/viafintech/sps_king/pull/16)
