@@ -18,7 +18,7 @@ module SPS
 
     def schema_compatible?(schema_name)
       case schema_name
-      when PAIN_001_001_03_CH_02
+      when PAIN_001_001_03_CH_02 || PAIN_001_001_09_CH_03
         !self.bic.nil?
       end
     end

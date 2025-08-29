@@ -51,6 +51,16 @@ module SPS
         val.round(2) if val&.finite? && val > 0
       end
 
+      # array of text converter for AdrLine
+      def convert_array(value)
+        return [] if value.nil?
+        if value.is_a?(Array)
+          value.map { |v| convert_text(v) }.reject(&:blank?)
+        else
+          [convert_text(value)].reject(&:blank?)
+        end
+      end
+
     end
 
   end

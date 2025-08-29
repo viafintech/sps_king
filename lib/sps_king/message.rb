@@ -4,6 +4,7 @@ module SPS
 
   PAIN_008_001_02_CH_03 = 'pain.008.001.02.ch.03'
   PAIN_001_001_03_CH_02 = 'pain.001.001.03.ch.02'
+  PAIN_001_001_09_CH_02 = 'pain.001.001.09.ch.02'
 
   class Message
 
@@ -24,6 +25,9 @@ module SPS
     end
 
     def add_transaction(options)
+      options[:creditor_address]&.schema_version = account.schema_version
+      options[:debtor_address]&.schema_version = account.schema_version
+
       transaction = transaction_class.new(options)
       raise ArgumentError.new(transaction.errors.full_messages.join("\n")) unless transaction.valid?
 
@@ -36,7 +40,7 @@ module SPS
     end
 
     # @return [String] xml
-    def to_xml(schema_name = self.known_schemas.first, encoding = 'UTF-8')
+    def to_xml(schema_name = get_schema, encoding = 'UTF-8')
       raise SPS::Error.new(errors.full_messages.join("\n")) unless valid?
       raise SPS::Error.new("Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
 
@@ -53,15 +57,19 @@ module SPS
       builder.to_xml
     end
 
+    def get_schema
+      self.known_schemas[account.schema_version]
+    end
+
     def amount_total(selected_transactions = transactions)
       selected_transactions.inject(0) { |sum, t| sum + t.amount }
     end
 
     def schema_compatible?(schema_name)
-      raise ArgumentError.new("Schema #{schema_name} is unknown!") unless self.known_schemas.include?(schema_name)
+      raise ArgumentError.new("Schema #{schema_name} is unknown!") unless self.known_schemas.values.include?(schema_name)
 
       case schema_name
-      when PAIN_001_001_03_CH_02
+      when PAIN_001_001_03_CH_02 || PAIN_001_001_09_CH_03
         transactions.all? { |t| t.schema_compatible?(schema_name) }
       when PAIN_008_001_02_CH_03
         transactions.all? { |t| t.schema_compatible?(schema_name) } &&

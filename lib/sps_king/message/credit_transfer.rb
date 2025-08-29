@@ -6,9 +6,11 @@ module SPS
     self.account_class = DebtorAccount
     self.transaction_class = CreditTransferTransaction
     self.xml_main_tag = 'CstmrCdtTrfInitn'
-    self.known_schemas = [
-      PAIN_001_001_03_CH_02
-    ]
+    self.known_schemas = {
+      V3: PAIN_001_001_03_CH_02,
+      V9: PAIN_001_001_09_CH_02
+
+    }
 
     private
 
@@ -92,13 +94,8 @@ module SPS
             builder.Nm(transaction.name)
             if transaction.creditor_address
               builder.PstlAdr do
-                # Only set the fields that are actually provided.
-                # StrtNm, BldgNb, PstCd, TwnNm provide a structured address
-                # separated into its individual fields.
-                # AdrLine provides the address in free format text.
-                # Both are currently allowed and the actual preference depends on the bank.
-                # Also the fields that are required legally may vary depending on the country
-                # or change over time.
+                # support pain_001.001.09.ch.03 address formats
+                # --- Structured address elements (all optional, but length-limited) ---
                 if transaction.creditor_address.street_name
                   builder.StrtNm transaction.creditor_address.street_name
                 end
@@ -107,6 +104,35 @@ module SPS
                   builder.BldgNb transaction.creditor_address.building_number
                 end
 
+                if transaction.creditor_address.building_name
+                  builder.BldgNm transaction.creditor_address.building_name     # NEW in v9 – Building name (max 35 chars)
+                end
+
+                if transaction.creditor_address.floor
+                  builder.Flr transaction.creditor_address.floor                # NEW in v9 – Floor (max 70 chars)
+                end
+
+                if transaction.creditor_address.room
+                  builder.Room transaction.creditor_address.room                # NEW in v9 – Room (max 70 chars)
+                end
+
+                if transaction.creditor_address.post_box
+                  builder.PstBx transaction.creditor_address.post_box           # NEW in v9 – Post box (max 16 chars)
+                end
+
+                if transaction.creditor_address.district_name
+                  builder.DstrctNm transaction.creditor_address.district_name   # NEW in v9 – District name (max 35 chars)
+                end
+
+                if transaction.creditor_address.department
+                  builder.Dept transaction.creditor_address.department          # NEW in v9 – Department (max 70 chars)
+                end
+
+                if transaction.creditor_address.sub_department
+                  builder.SubDept transaction.creditor_address.sub_department   # NEW in v9 – Sub-department (max 70 chars)
+                end
+
+                # --- Mandatory core fields ---
                 if transaction.creditor_address.post_code
                   builder.PstCd transaction.creditor_address.post_code
                 end
@@ -119,6 +145,7 @@ module SPS
                   builder.Ctry transaction.creditor_address.country_code
                 end
 
+                # --- Free-format address lines (AdrLine) ---
                 if transaction.creditor_address.address_line1
                   builder.AdrLine transaction.creditor_address.address_line1
                 end

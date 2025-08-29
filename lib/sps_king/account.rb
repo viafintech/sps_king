@@ -8,7 +8,8 @@ module SPS
 
     attr_accessor :name,
                   :iban,
-                  :bic
+                  :bic,
+                  :schema_version
 
     convert :name, to: :text
 
@@ -16,6 +17,10 @@ module SPS
     validates_with BICValidator,
                    IBANValidator,
                    message: "%{value} is invalid"
+
+    def schema_version
+      ( @schema_version || :V3 ).to_sym
+    end
 
     def initialize(attributes = {})
       attributes.each do |name, value|

@@ -6,9 +6,11 @@ module SPS
     self.account_class = CreditorAccount
     self.transaction_class = DirectDebitTransaction
     self.xml_main_tag = 'CstmrDrctDbtInitn'
-    self.known_schemas = [
-      PAIN_008_001_02_CH_03
-    ]
+    self.known_schemas = {
+      V3: PAIN_008_001_02_CH_03,
+      V9: PAIN_001_001_09_CH_02
+
+    }
 
     validate do |record|
       if record.transactions.map(&:local_instrument).uniq.size > 1
