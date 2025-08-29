@@ -138,6 +138,10 @@ xml_string = sdd.to_xml # Use latest schema pain.008.001.02.ch.03
 How to create the XML for **Credit Transfer Initiation** (in German: "Überweisungen")
 
 ```ruby
+# NOTE: Now that Swiss Implementation v1.9 `pain.001.001.09.ch.02` is now supported for Credit Transfers
+# To use the Swiss Implementation v1.9 schema, You need to pass an attribute " schema_version: :V9" to SPS::CreditTransfer.new
+# If schema_version is provided then it uses v1.9 `pain.001.001.09.ch.02`, else it uses v1.8 `pain.001.001.03.ch.02`
+
 # First: Create the main object
 sct = SPS::CreditTransfer.new(
   # Name of the initiating party and debtor, in German: "Auftraggeber"
