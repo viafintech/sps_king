@@ -82,4 +82,101 @@ describe SPS::Address do
             )
     end
   end
+
+  #
+  # NEW SPECS FOR SCHEMA-SPECIFIC BEHAVIOR
+  #
+  context 'with schema-specific rules' do
+    let(:schema_v3) { SPS::PAIN_001_001_03_CH_02 }
+    let(:schema_v9) { SPS::PAIN_001_001_09_CH_03 }
+
+    context 'hybrid mode (mixing line + structured fields)' do
+      let(:hybrid_address) do
+        described_class.new(
+          country_code: 'CH',
+          address_line1: 'Mustergasse 123',
+          town_name: 'Musterstadt'
+        )
+      end
+
+      it 'is valid in v9' do
+        hybrid_address.schema_version = schema_v9
+        expect(hybrid_address).to be_valid
+      end
+    end
+
+    context 'structured mode' do
+      let(:structured_address) do
+        described_class.new(
+          country_code: 'CH',
+          street_name: 'Mustergasse',
+          building_number: '12a',
+          post_code: '1234',
+          town_name: 'Musterstadt'
+        )
+      end
+
+      it 'is valid in v3' do
+        structured_address.schema_version = schema_v3
+        expect(structured_address).to be_valid
+      end
+
+      it 'is valid in v9' do
+        structured_address.schema_version = schema_v9
+        expect(structured_address).to be_valid
+      end
+    end
+
+    it 'is invalid in v3 without town_name and address_line2' do
+      addr = described_class.new(country_code: 'CH')
+      addr.schema_version = schema_v3
+      expect(addr).not_to be_valid
+      expect(addr.errors.details).to include(
+      town_name:     [error: :blank],
+      address_line2: [error: :blank]
+    )
+    end
+
+    it 'is invalid in v9 without town_name' do
+      addr = described_class.new(country_code: 'CH')
+      addr.schema_version = schema_v9
+      expect(addr).not_to be_valid
+      expect(addr.errors.details).to include(
+        town_name:     [error: :blank],
+        address_line2: [error: :blank] # because our validator still enforces fallback
+      )
+    end
+
+    it 'is invalid in v9 without country_code' do
+      addr = described_class.new(town_name: 'Musterstadt')
+      addr.schema_version = schema_v9
+      expect(addr).not_to be_valid
+      expect(addr.errors.details).to include(
+        country_code: [
+          { error: :blank },
+          { error: :invalid, value: nil }
+        ]
+      )
+    end
+
+    context 'line mode' do
+      let(:line_address) do
+        described_class.new(
+          country_code: 'CH',
+          address_line1: 'Mustergasse 12a',
+          address_line2: '1234 Musterstadt'
+        )
+      end
+
+      it 'is valid in v3' do
+        line_address.schema_version = schema_v3
+        expect(line_address).to be_valid
+      end
+
+      it 'is valid in v9' do
+        line_address.schema_version = schema_v9
+        expect(line_address).to be_valid
+      end
+    end
+  end
 end

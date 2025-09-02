@@ -7,9 +7,8 @@ module SPS
     self.transaction_class = DirectDebitTransaction
     self.xml_main_tag = 'CstmrDrctDbtInitn'
     self.known_schemas = {
-      V3: PAIN_008_001_02_CH_03,
-      V9: PAIN_001_001_09_CH_02
-
+      pain_008_001_02_ch_03: PAIN_008_001_02_CH_03,
+      pain_001_001_09_ch_03: PAIN_001_001_09_CH_03
     }
 
     validate do |record|

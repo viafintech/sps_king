@@ -535,5 +535,41 @@ describe SPS::CreditTransfer do
         expect(subject).to include('ISO-8859-8')
       end
     end
+
+  context 'schema-specific rules for v9' do
+    subject do
+      sct = SPS::CreditTransfer.new(
+        name: 'Schuldner GmbH',
+        iban: 'CH5481230000001998736',
+        bic: 'RAIFCH22',
+        schema_version: :pain_001_001_09_ch_03
+      )
+      sca = SPS::CreditorAddress.new(
+        country_code: 'CH',
+        street_name: 'Mustergasse',
+        building_number: '123',
+        post_code: '1234'
+      )
+
+      sct.add_transaction(
+        name: 'Contoso AG',
+        bic: 'CRESCHZZ80A',
+        iban: 'CH9300762011623852957',
+        amount: 102.50,
+        reference: 'XYZ-1234/123',
+        remittance_information: 'Rechnung vom 22.08.2013',
+        creditor_address: sca
+      )
+      sct
+    end
+
+    it 'is valid with town_name in v9' do
+      subject.transactions.first.creditor_address.town_name = 'Musterstadt'
+      expect(
+        subject.to_xml(SPS::PAIN_001_001_09_CH_03)
+      ).to validate_against('pain.001.001.09.ch.03.xsd')
+    end
+  end
+
   end
 end

@@ -139,7 +139,7 @@ How to create the XML for **Credit Transfer Initiation** (in German: "Überweisu
 
 ```ruby
 # NOTE: Now that Swiss Implementation v1.9 `pain.001.001.09.ch.02` is now supported for Credit Transfers
-# To use the Swiss Implementation v1.9 schema, You need to pass an attribute " schema_version: :V9" to SPS::CreditTransfer.new
+# To use the Swiss Implementation v1.9 schema, You need to pass an attribute " schema_version: :pain_001_001_09_ch_03" to SPS::CreditTransfer.new
 # If schema_version is provided then it uses v1.9 `pain.001.001.09.ch.02`, else it uses v1.8 `pain.001.001.03.ch.02`
 
 # First: Create the main object

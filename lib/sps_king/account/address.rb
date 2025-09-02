@@ -59,7 +59,7 @@ module SPS
 
 
     def initialize(attributes = {})
-      @version = attributes.delete(:version) || :V3
+      @version = attributes.delete(:version) || :pain_001_001_03_ch_02
       attributes.each do |name, value|
         public_send("#{name}=", value)
       end
@@ -80,15 +80,15 @@ module SPS
       end
 
       def address_with_version
-        if @version == :V3
-          verify_v3_address
-        else
+        if @version == :pain_001_001_09_ch_03
           verify_v9_address
+        else
+          verify_v3_address
         end
       end
 
       def verify_v3_address
-        errors.add(:address_line2, :blank) if address_line2.blank? && town_name.blank? 
+        errors.add(:address_line2, :blank) if address_line2.blank? && town_name.blank?
         errors.add(:town_name, :blank) if town_name.blank? && address_line2.blank?
       end
 

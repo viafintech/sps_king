@@ -7,8 +7,8 @@ module SPS
     self.transaction_class = CreditTransferTransaction
     self.xml_main_tag = 'CstmrCdtTrfInitn'
     self.known_schemas = {
-      V3: PAIN_001_001_03_CH_02,
-      V9: PAIN_001_001_09_CH_02
+      pain_001_001_03_ch_02: PAIN_001_001_03_CH_02,
+      pain_001_001_09_ch_03: PAIN_001_001_09_CH_03
 
     }
 

@@ -4,13 +4,13 @@ module SPS
 
   PAIN_008_001_02_CH_03 = 'pain.008.001.02.ch.03'
   PAIN_001_001_03_CH_02 = 'pain.001.001.03.ch.02'
-  PAIN_001_001_09_CH_02 = 'pain.001.001.09.ch.02'
+  PAIN_001_001_09_CH_03 = 'pain.001.001.09.ch.03'
 
   class Message
 
     include ActiveModel::Validations
 
-    attr_reader :account, :grouped_transactions
+    attr_reader :account, :grouped_transactions, :schema_name
 
     validates_presence_of :transactions
     validate do |record|
@@ -22,17 +22,22 @@ module SPS
     def initialize(account_options = {})
       @grouped_transactions = {}
       @account = account_class.new(account_options)
+      @schema_name = get_schema
     end
 
     def add_transaction(options)
-      options[:creditor_address]&.schema_version = account.schema_version
-      options[:debtor_address]&.schema_version = account.schema_version
+      options[:creditor_address]&.schema_version = account.schema_version(schema_type)
+      options[:debtor_address]&.schema_version = account.schema_version(schema_type)
 
       transaction = transaction_class.new(options)
       raise ArgumentError.new(transaction.errors.full_messages.join("\n")) unless transaction.valid?
 
       @grouped_transactions[transaction_group(transaction)] ||= []
       @grouped_transactions[transaction_group(transaction)] << transaction
+    end
+
+    def schema_type
+      self.class.transaction_class == CreditTransferTransaction ? 'credit_transfers_schema' : 'direct_debit_schema'
     end
 
     def transactions
@@ -58,7 +63,9 @@ module SPS
     end
 
     def get_schema
-      self.known_schemas[account.schema_version]
+      version = account.schema_version(schema_type)
+      return nil if version.nil?
+      self.known_schemas[version] unless self.known_schemas.nil?
     end
 
     def amount_total(selected_transactions = transactions)
@@ -69,7 +76,7 @@ module SPS
       raise ArgumentError.new("Schema #{schema_name} is unknown!") unless self.known_schemas.values.include?(schema_name)
 
       case schema_name
-      when PAIN_001_001_03_CH_02 || PAIN_001_001_09_CH_03
+      when PAIN_001_001_03_CH_02, PAIN_001_001_09_CH_03
         transactions.all? { |t| t.schema_compatible?(schema_name) }
       when PAIN_008_001_02_CH_03
         transactions.all? { |t| t.schema_compatible?(schema_name) } &&
@@ -126,12 +133,22 @@ module SPS
 
       # @return {Hash<Symbol=>String>} xml schema information used in output xml
       def xml_schema(schema_name)
-        {
-          :xmlns                => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd",
-          :'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
-          :'xsi:schemaLocation' => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd #{schema_name}.xsd"
-        }
+        if schema_name.include?("001.001.09") # v9 logic
+          {
+            xmlns: "urn:iso:std:iso:20022:tech:xsd:pain.001.001.09",
+            'xmlns:xsi': "http://www.w3.org/2001/XMLSchema-instance",
+            'xsi:schemaLocation': "urn:iso:std:iso:20022:tech:xsd:pain.001.001.09 pain.001.001.09.ch.03.xsd"
+          }
+        else # old SIX logic
+          {
+            xmlns: "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd",
+            'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+            'xsi:schemaLocation': "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd #{schema_name}.xsd"
+          }
+        end
       end
+
+
 
       def build_group_header(builder)
         builder.GrpHdr do
