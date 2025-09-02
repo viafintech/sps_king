@@ -47,7 +47,7 @@ module SPS
         return iban.to_s[4..8].sub(/^0*/, '')
       end
 
-      def build_payment_informations(builder)
+      def build_payment_informations(builder, schema_name = PAIN_008_001_02_CH_03)
         # Build a PmtInf block for every group of transactions
         grouped_transactions.each do |group, transactions|
           builder.PmtInf do

@@ -47,7 +47,13 @@ module SPS
                 end
               end
             end
-            builder.ReqdExctnDt(group[:requested_date].iso8601)
+            if schema_name == PAIN_001_001_09_CH_03
+              builder.ReqdExctnDt do
+                builder.Dt(group[:requested_date].iso8601)
+              end
+            else
+              builder.ReqdExctnDt(group[:requested_date].iso8601)
+            end
             builder.Dbtr do
               builder.Nm(account.name)
             end
@@ -58,7 +64,11 @@ module SPS
             end
             builder.DbtrAgt do
               builder.FinInstnId do
-                builder.BIC(account.bic)
+                if schema_name == PAIN_001_001_09_CH_03
+                  builder.BICFI(account.bic)
+                else
+                  builder.BIC(account.bic)
+                end
               end
             end
             if group[:charge_bearer]
@@ -86,7 +96,11 @@ module SPS
           if transaction.bic
             builder.CdtrAgt do
               builder.FinInstnId do
-                builder.BIC(transaction.bic)
+                if schema_name == PAIN_001_001_09_CH_03
+                  builder.BICFI(transaction.bic)
+                else
+                  builder.BIC(transaction.bic)
+                end
               end
             end
           end
