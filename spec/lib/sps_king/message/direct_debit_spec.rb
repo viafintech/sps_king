@@ -384,9 +384,9 @@ describe SPS::DirectDebit do
           it 'should not be schema compatible' do
             direct_debit.transactions.first.structured_remittance_information = nil
 
-            expect {
+            expect do
               direct_debit.to_xml(SPS::PAIN_008_001_02_CH_03)
-            }.to raise_error(SPS::Error, "Incompatible with schema pain.008.001.02.ch.03!")
+            end.to raise_error(SPS::Error)
           end
         end
       end

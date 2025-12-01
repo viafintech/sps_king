@@ -1,4 +1,4 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 require 'spec_helper'
 
@@ -533,6 +533,39 @@ describe SPS::CreditTransfer do
       it 'should include encoding in the xml string' do
         expect(subject).to include('encoding')
         expect(subject).to include('ISO-8859-8')
+      end
+    end
+
+    context 'with schema v1.9' do
+      let(:credit_transfer) do
+        sct = SPS::CreditTransfer.new(
+                name: 'Schuldner GmbH',
+                iban: 'CH5481230000001998736',
+                bic:  'RAIFCH22',
+              )
+        creditor_address = SPS::CreditorAddress.new(
+                             country_code:    'CH',
+                             street_name:     'Mustergasse',
+                             building_number: '123',
+                             post_code:       '1234',
+                             town_name:       'Musterstadt'
+                           )
+
+        sct.add_transaction(
+          name:                   'Contoso AG',
+          bic:                    'CRESCHZZ80A',
+          iban:                   'CH9300762011623852957',
+          amount:                 102.50,
+          reference:              'XYZ-1234/123',
+          remittance_information: 'Rechnung vom 22.08.2013',
+          creditor_address:       creditor_address,
+        )
+        sct
+      end
+
+      it 'should be valid against v1.9' do
+        expect(credit_transfer.to_xml(SPS::PAIN_001_001_09_CH_03))
+          .to validate_against('pain.001.001.09.ch.03.xsd')
       end
     end
   end

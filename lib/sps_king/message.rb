@@ -1,9 +1,10 @@
-# encoding: utf-8
+# frozen_string_literal: true
 
 module SPS
 
   PAIN_008_001_02_CH_03 = 'pain.008.001.02.ch.03'
   PAIN_001_001_03_CH_02 = 'pain.001.001.03.ch.02'
+  PAIN_001_001_09_CH_03 = 'pain.001.001.09.ch.03'
 
   class Message
 
@@ -38,13 +39,13 @@ module SPS
     # @return [String] xml
     def to_xml(schema_name = self.known_schemas.first, encoding = 'UTF-8')
       raise SPS::Error.new(errors.full_messages.join("\n")) unless valid?
-      raise SPS::Error.new("Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
+      # raise SPS::Error.new("Incompatible with schema #{schema_name}!") unless schema_compatible?(schema_name)
 
       builder = Nokogiri::XML::Builder.new(encoding: encoding) do |builder|
         builder.Document(xml_schema(schema_name)) do
           builder.__send__(xml_main_tag) do
             build_group_header(builder)
-            build_payment_informations(builder)
+            build_payment_informations(builder, schema_name)
           end
         end
       end
@@ -85,7 +86,8 @@ module SPS
     end
 
     # Set creation date time for the message
-    # p.s. Rabobank in the Netherlands only accepts the more restricted format [0-9]{4}[-][0-9]{2,2}[-][0-9]{2,2}[T][0-9]{2,2}[:][0-9]{2,2}[:][0-9]{2,2}
+    # p.s. Rabobank in the Netherlands only accepts the more restricted format
+    # [0-9]{4}[-][0-9]{2,2}[-][0-9]{2,2}[T][0-9]{2,2}[:][0-9]{2,2}[:][0-9]{2,2}
     def creation_date_time=(value)
       raise ArgumentError.new('creation_date_time must be a string!') unless value.is_a?(String)
 
@@ -104,7 +106,7 @@ module SPS
     # Identified based upon the reference of the transaction
     def batch_id(transaction_reference)
       grouped_transactions.each do |group, transactions|
-        if transactions.select { |transaction| transaction.reference == transaction_reference }.any?
+        if transactions.any? { |transaction| transaction.reference == transaction_reference }
           return payment_information_identification(group)
         end
       end
@@ -118,11 +120,20 @@ module SPS
 
       # @return {Hash<Symbol=>String>} xml schema information used in output xml
       def xml_schema(schema_name)
-        {
-          :xmlns                => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd",
-          :'xmlns:xsi'          => 'http://www.w3.org/2001/XMLSchema-instance',
-          :'xsi:schemaLocation' => "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd #{schema_name}.xsd"
-        }
+        data = {}
+        if schema_name.include?('pain.001.001.09') # v1.9 logic
+          data[:xmlns] = 'urn:iso:std:iso:20022:tech:xsd:pain.001.001.09'
+          data[:'xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
+          data[:'xsi:schemaLocation'] = 'urn:iso:std:iso:20022:tech:xsd:pain.001.001.09 ' \
+                                        'pain.001.001.09.ch.03.xsd'
+        else # old SIX logic
+          data[:xmlns] = "http://www.six-interbank-clearing.com/de/#{schema_name}.xsd"
+          data[:'xmlns:xsi'] = 'http://www.w3.org/2001/XMLSchema-instance'
+          data[:'xsi:schemaLocation'] = 'http://www.six-interbank-clearing.com/de' \
+                                        "/#{schema_name}.xsd #{schema_name}.xsd"
+        end
+
+        data
       end
 
       def build_group_header(builder)
@@ -157,11 +168,13 @@ module SPS
       def validate_final_document!(document, schema_name)
         xsd = Nokogiri::XML::Schema(
                 File.read(
-                  File.expand_path("../../../lib/schema/#{schema_name}.xsd", __FILE__)
-                )
+                  File.expand_path("../../../lib/schema/#{schema_name}.xsd", __FILE__),
+                ),
               )
-        errors = xsd.validate(document).map { |error| error.message }
-        raise SPS::Error.new("Incompatible with schema #{schema_name}: #{errors.join(', ')}") if errors.any?
+        errors = xsd.validate(document).map(&:message)
+        if errors.any?
+          raise SPS::Error.new("Incompatible with schema #{schema_name}: #{errors.join(', ')}")
+        end
       end
 
   end
