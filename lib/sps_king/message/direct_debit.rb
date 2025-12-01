@@ -27,7 +27,7 @@ module SPS
           requested_date:   transaction.requested_date,
           service_level:    transaction.service_level,
           local_instrument: transaction.local_instrument,
-          account:          transaction.creditor_account || account
+          account:          transaction.creditor_account || account,
         }
       end
 
@@ -46,7 +46,7 @@ module SPS
         return iban.to_s[4..8].sub(/^0*/, '')
       end
 
-      def build_payment_informations(builder)
+      def build_payment_informations(builder, _schema_name)
         # Build a PmtInf block for every group of transactions
         grouped_transactions.each do |group, transactions|
           builder.PmtInf do
@@ -166,10 +166,10 @@ module SPS
               builder.CdtrRefInf do
                 builder.Tp do
                   builder.CdOrPrtry do
-                    builder.Prtry(transaction.structured_remittance_information.proprietary)
+                    builder.Prtry(transaction.structured_remittance_information&.proprietary)
                   end
                 end
-                builder.Ref(transaction.structured_remittance_information.reference)
+                builder.Ref(transaction.structured_remittance_information&.reference)
               end
             end
           end

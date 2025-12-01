@@ -7,7 +7,8 @@ module SPS
     self.transaction_class = CreditTransferTransaction
     self.xml_main_tag = 'CstmrCdtTrfInitn'
     self.known_schemas = [
-      PAIN_001_001_03_CH_02
+      PAIN_001_001_03_CH_02,
+      PAIN_001_001_09_CH_03,
     ]
 
     private
@@ -23,7 +24,7 @@ module SPS
         }
       end
 
-      def build_payment_informations(builder)
+      def build_payment_informations(builder, schema_name)
         # Build a PmtInf block for every group of transactions
         grouped_transactions.each do |group, transactions|
           # All transactions with the same requested_date are placed into the same PmtInf block
@@ -45,7 +46,13 @@ module SPS
                 end
               end
             end
-            builder.ReqdExctnDt(group[:requested_date].iso8601)
+            if schema_name == PAIN_001_001_09_CH_03
+              builder.ReqdExctnDt do
+                builder.Dt(group[:requested_date].iso8601)
+              end
+            else
+              builder.ReqdExctnDt(group[:requested_date].iso8601)
+            end
             builder.Dbtr do
               builder.Nm(account.name)
             end
@@ -56,7 +63,11 @@ module SPS
             end
             builder.DbtrAgt do
               builder.FinInstnId do
-                builder.BIC(account.bic)
+                if schema_name == PAIN_001_001_09_CH_03
+                  builder.BICFI(account.bic)
+                else
+                  builder.BIC(account.bic)
+                end
               end
             end
             if group[:charge_bearer]
@@ -64,13 +75,13 @@ module SPS
             end
 
             transactions.each do |transaction|
-              build_transaction(builder, transaction)
+              build_transaction(builder, transaction, schema_name)
             end
           end
         end
       end
 
-      def build_transaction(builder, transaction)
+      def build_transaction(builder, transaction, schema_name)
         builder.CdtTrfTxInf do
           builder.PmtId do
             if transaction.instruction.present?
@@ -84,7 +95,11 @@ module SPS
           if transaction.bic
             builder.CdtrAgt do
               builder.FinInstnId do
-                builder.BIC(transaction.bic)
+                if schema_name == PAIN_001_001_09_CH_03
+                  builder.BICFI(transaction.bic)
+                else
+                  builder.BIC(transaction.bic)
+                end
               end
             end
           end
@@ -94,11 +109,19 @@ module SPS
               builder.PstlAdr do
                 # Only set the fields that are actually provided.
                 # StrtNm, BldgNb, PstCd, TwnNm provide a structured address
-                # separated into its individual fields.
+                # separated into its individual fields. More detailed fields are possible
                 # AdrLine provides the address in free format text.
                 # Both are currently allowed and the actual preference depends on the bank.
                 # Also the fields that are required legally may vary depending on the country
                 # or change over time.
+                if transaction.creditor_address.department
+                  builder.Dept transaction.creditor_address.department        # v1.9
+                end
+
+                if transaction.creditor_address.sub_department
+                  builder.SubDept transaction.creditor_address.sub_department # v1.9
+                end
+
                 if transaction.creditor_address.street_name
                   builder.StrtNm transaction.creditor_address.street_name
                 end
@@ -107,12 +130,40 @@ module SPS
                   builder.BldgNb transaction.creditor_address.building_number
                 end
 
+                if transaction.creditor_address.building_name
+                  builder.BldgNm transaction.creditor_address.building_name # v1.9
+                end
+
+                if transaction.creditor_address.floor
+                  builder.Flr transaction.creditor_address.floor      # v1.9
+                end
+
+                if transaction.creditor_address.post_box
+                  builder.PstBx transaction.creditor_address.post_box # v1.9
+                end
+
+                if transaction.creditor_address.room
+                  builder.Room transaction.creditor_address.room      # v1.9
+                end
+
                 if transaction.creditor_address.post_code
                   builder.PstCd transaction.creditor_address.post_code
                 end
 
                 if transaction.creditor_address.town_name
                   builder.TwnNm transaction.creditor_address.town_name
+                end
+
+                if transaction.creditor_address.town_location_name
+                  builder.TwnLctnNm transaction.creditor_address.town_location_name # v1.9
+                end
+
+                if transaction.creditor_address.district_name
+                  builder.DstrctNm transaction.creditor_address.district_name   # v1.9
+                end
+
+                if transaction.creditor_address.country_subdivision
+                  builder.CtrySubDvsn transaction.creditor_address.country_subdivision # v1.9
                 end
 
                 if transaction.creditor_address.country_code

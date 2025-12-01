@@ -61,10 +61,16 @@ describe SPS::Address do
     let(:subject_too_long) do
       described_class.new(
         country_code:,
-        street_name:     'X' * 71,
-        building_number: 'X' * 17,
-        post_code:       'X' * 17,
-        town_name:       'X' * 36,
+        street_name:         'X' * 71,
+        building_number:     'X' * 17,
+        building_name:       'X' * 36,
+        floor:               'X' * 71,
+        post_box:            'X' * 17,
+        room:                'X' * 71,
+        post_code:           'X' * 17,
+        town_name:           'X' * 36,
+        country_subdivision: 'X' * 36,
+        country_code:        'CHU',
       )
     end
 
