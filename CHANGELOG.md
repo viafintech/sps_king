@@ -1,3 +1,8 @@
+## What's Changed in v0.6.1
+* Add support for execution with Ruby 4 [#21](https://github.com/viafintech/sps_king/pull/21)
+
+**Full Changelog**: https://github.com/viafintech/sps_king/compare/v0.6.0...v0.6.1
+
 ## What's Changed in v0.6.0
 * Update covered ruby and activemodel versions for testing
 * Improvement of the convert_decimal function by @casaper in [#14](https://github.com/viafintech/sps_king/pull/14)
