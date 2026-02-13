@@ -1,3 +1,9 @@
+## What's Changed in v0.7.0
+
+* Add support for pain.001.001.09.ch.03 in [#20](https://github.com/viafintech/sps_king/pull/20)
+
+**Full Changelog**: https://github.com/viafintech/sps_king/compare/v0.6.1...v0.7.0
+
 ## What's Changed in v0.6.1
 * Add support for execution with Ruby 4 [#21](https://github.com/viafintech/sps_king/pull/21)
 
