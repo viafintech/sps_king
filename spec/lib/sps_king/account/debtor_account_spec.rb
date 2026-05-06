@@ -8,7 +8,8 @@ describe SPS::DebtorAccount do
       SPS::DebtorAccount.new(
         name: 'Gläubiger GmbH',
         bic:  'BANKDEFFXXX',
-        iban: 'DE87200500001234567890'
+        iban: 'DE87200500001234567890',
+        proprietary: 'CWD'
       )
     ).to be_valid
   end
