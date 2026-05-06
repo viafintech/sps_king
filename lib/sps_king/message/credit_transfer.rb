@@ -60,6 +60,11 @@ module SPS
               builder.Id do
                 builder.IBAN(account.iban)
               end
+              if account.proprietary.present?
+                builder.Tp do
+                  builder.Prtry(account.proprietary)
+                end
+              end
             end
             builder.DbtrAgt do
               builder.FinInstnId do
