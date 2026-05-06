@@ -1,6 +1,9 @@
-## What's changed in TBD
+## What's Changed in in v0.8.0
 
 * Add support for validating debitor account proprietary field by @Nymuxyzo in [#23](https://github.com/viafintech/sps_king/pull/23)
+* Fix missing schema version in `schema_compatible?`
+
+**Full Changelog**: https://github.com/viafintech/sps_king/compare/v0.7.0...v0.8.0
 
 ## What's Changed in v0.7.0
 
