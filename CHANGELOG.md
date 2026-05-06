@@ -1,3 +1,7 @@
+## What's changed in TBD
+
+* Add support for validating debitor account proprietary field by @Nymuxyzo in [#23](https://github.com/viafintech/sps_king/pull/23)
+
 ## What's Changed in v0.7.0
 
 * Add support for pain.001.001.09.ch.03 in [#20](https://github.com/viafintech/sps_king/pull/20)
